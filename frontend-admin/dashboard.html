@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - Rifakat Shoe Garden</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <header>
+        <h1>Product Dashboard</h1>
+
+        <div class="filter-container">
+          <label for="category-filter">Filter by Category:</label>
+          <select id="category-filter">
+            <option value="all">All Products</option>
+            <option value="Sneakers">Sneakers</option>
+            <option value="Boots">Boots</option>
+            <option value="Sandals">Sandals</option>
+            <option value="Slippers">Slippers</option>
+            <option value="Formal Shoes">Formal Shoes</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary add-product-btn">Add New Product</button>
+        <button class="btn btn-secondary" id="logout-btn">Logout</button>
+      </header>
+
+      <div class="search-container form-group">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search by product name or brand..."
+        />
+      </div>
+
+      <main>
+        <table>
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Brand</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="product-list"></tbody>
+        </table>
+      </main>
+    </div>
+    <script src="/frontend-admin/utils.js"></script>
+
+    <script src="dashboard.js" defer></script>
+  </body>
+</html>
