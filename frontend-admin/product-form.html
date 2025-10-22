@@ -1,55 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Manage Product - Rifakat Shoe Garden</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <div class="form-container">
-        <h2 id="form-title">Add New Product</h2>
-        <form id="product-form">
-            <input type="hidden" id="productId">
+      <h2 id="form-title">Add New Product</h2>
+      <form id="product-form">
+        <input type="hidden" id="productId" />
 
-            <div class="form-group">
-                <label for="productName">Product Name</label>
-                <input type="text" id="productName" required>
-            </div>
-            <!-- NEW BRAND FIELD ADDED -->
-            <div class="form-group">
-                <label for="brand">Brand (e.g., Nike, Adidas, or leave blank for non-branded)</label>
-                <input type="text" id="brand">
-            </div>
-            <div class="form-group">
-                <label for="category">Category</label>
-                <select id="category" required>
-                    <option value="">-- Select a Category --</option>
-                    <option value="Sneakers">Sneakers</option>
-                    <option value="Boots">Boots</option>
-                    <option value="Sandals">Sandals</option>
-                    <option value="Slippers">Slippers</option>
-                    <option value="Formal Shoes">Formal Shoes</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="price">Price (₹)</label>
-                <input type="number" id="price" required>
-            </div>
+        <div class="form-group">
+          <label for="productName">Product Name</label>
+          <input type="text" id="productName" required />
+        </div>
+        <!-- NEW BRAND FIELD ADDED -->
+        <div class="form-group">
+          <label for="brand"
+            >Brand (e.g., Nike, Adidas, or leave blank for non-branded)</label
+          >
+          <input type="text" id="brand" />
+        </div>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" required>
+            <option value="">-- Select a Category --</option>
+            <option value="Sneakers">Sneakers</option>
+            <option value="Boots">Boots</option>
+            <option value="Sandals">Sandals</option>
+            <option value="Slippers">Slippers</option>
+            <option value="Formal Shoes">Formal Shoes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="price">Price (₹)</label>
+          <input type="number" id="price" required />
+        </div>
 
-            <hr>
-            <h3>Color Variations</h3>
-            <div id="color-variations-container">
-                </div>
-            <button type="button" id="add-color-btn" class="btn btn-secondary">Add Color</button>
-            <hr>
+        <hr />
+        <h3>Color Variations</h3>
+        <div id="color-variations-container"></div>
+        <button type="button" id="add-color-btn" class="btn btn-gray">
+          Add Color
+        </button>
+        <hr />
 
-            <button type="submit" class="btn">Save Product</button>
-            <a href="dashboard.html" class="btn btn-link">Cancel</a>
-        </form>
+        <button type="submit" class="btn">Save Product</button>
+        <a href="dashboard.html" class="btn btn-link">Cancel</a>
+      </form>
     </div>
     <script src="/frontend-admin/utils.js"></script>
 
     <script src="form.js"></script>
-</body>
+  </body>
 </html>
