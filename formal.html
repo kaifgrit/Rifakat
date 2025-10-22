@@ -1,111 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Formal Shoes Collection - Rifakat Shoe Garden</title> 
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Formal Shoes Collection - Rifakat Shoe Garden</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        :root {
-            --accent-red: #EA553B;
-            --accent-red-darker: #D44A32;
-            --neutral-light: #f8f9fa;
-            --text-primary: #1f2937;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            color: var(--text-primary);
-            background-color: var(--neutral-light);
-        }
-        .header {
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-        }
-        .nav-link::after {
-            content: ''; display: block; width: 0; height: 2px;
-            background: var(--accent-red); transition: width .3s;
-        }
-        .nav-link:hover::after { width: 100%; }
-        .cta-button {
-            background-color: var(--accent-red);
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-        .cta-button:hover {
-            background-color: var(--accent-red-darker);
-            transform: translateY(-2px);
-        }
-        .product-card img { transition: transform 0.3s ease; }
-        .product-card:hover .product-image-container img { transform: scale(1.05); }
-        .product-images img { display: none; }
-        .product-images img.active { display: block; }
-        .color-swatches { display: flex; gap: 0.5rem; margin-top: 0.75rem; justify-content: center; }
-        .color-swatch { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid #e5e7eb; transition: transform 0.2s, border-color 0.2s; }
-        .color-swatch:hover { transform: scale(1.1); }
-        .color-swatch.active { border-color: var(--accent-red); box-shadow: 0 0 0 2px white, 0 0 0 4px var(--accent-red); }
+      :root {
+        --accent-red: #ea553b;
+        --accent-red-darker: #d44a32;
+        --neutral-light: #f8f9fa;
+        --text-primary: #1f2937;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        color: var(--text-primary);
+        background-color: var(--neutral-light);
+      }
+      .header {
+        background-color: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+      }
+      .nav-link::after {
+        content: "";
+        display: block;
+        width: 0;
+        height: 2px;
+        background: var(--accent-red);
+        transition: width 0.3s;
+      }
+      .nav-link:hover::after {
+        width: 100%;
+      }
+      .cta-button {
+        background-color: var(--accent-red);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      .cta-button:hover {
+        background-color: var(--accent-red-darker);
+        transform: translateY(-2px);
+      }
+      .product-card img {
+        transition: transform 0.3s ease;
+      }
+      .product-card:hover .product-image-container img {
+        transform: scale(1.05);
+      }
+      .product-images img {
+        display: none;
+      }
+      .product-images img.active {
+        display: block;
+      }
+      .color-swatches {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        justify-content: center;
+      }
+      .color-swatch {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid #e5e7eb;
+        transition: transform 0.2s, border-color 0.2s;
+      }
+      .color-swatch:hover {
+        transform: scale(1.1);
+      }
+      .color-swatch.active {
+        border-color: var(--accent-red);
+        box-shadow: 0 0 0 2px white, 0 0 0 4px var(--accent-red);
+      }
     </style>
-</head>
-<body>
-
-<header id="header" class="header sticky top-0 z-50 p-4 text-white">
-    <div class="container mx-auto flex justify-between items-center">
+  </head>
+  <body>
+    <header id="header" class="header sticky top-0 z-50 p-4 text-white">
+      <div class="container mx-auto flex justify-between items-center">
         <a href="index.html">
-             <img class="h-12 w-auto" src="/assets/logo.jpg" alt="Rifakat Shoe Garden Logo">
+          <img
+            class="h-12 w-auto"
+            src="/assets/logo.jpg"
+            alt="Rifakat Shoe Garden Logo"
+          />
         </a>
-        
+
         <div class="text-lg font-bold tracking-wider md:hidden">
-            Rifakat Shoe Garden
+          Rifakat Shoe Garden
         </div>
 
         <nav class="hidden md:flex items-center space-x-8">
-            <a href="index.html#home" class="nav-link">Home</a>
-            <a href="index.html#about" class="nav-link">About</a>
-            <a href="index.html#categories" class="nav-link">Collection</a>
-            <a href="index.html#contact" class="nav-link">Contact</a>
+          <a href="index.html#home" class="nav-link">Home</a>
+          <a href="index.html#about" class="nav-link">About</a>
+          <a href="index.html#categories" class="nav-link">Collection</a>
+          <a href="index.html#contact" class="nav-link">Contact</a>
         </nav>
-        
-    </div>
-</header>
+      </div>
+    </header>
 
-<main>
-    <section class="py-16 md:py-24">
+    <main>
+      <section class="py-16 md:py-24">
         <div class="container mx-auto px-4">
-            <div class="text-center mb-12">
-                <h1 id="page-title" class="text-4xl md:text-5xl font-bold mb-4">Loading...</h1>
-                <p class="text-lg text-gray-600">Please wait while we fetch our collection.</p>
-            </div>
+          <div class="text-center mb-12">
+            <h1 id="page-title" class="text-4xl md:text-5xl font-bold mb-4">
+              Loading...
+            </h1>
+            <p class="text-lg text-gray-600">
+              Please wait while we fetch our collection.
+            </p>
+          </div>
 
-            <div id="product-container">
-                <p>Loading products...</p>
-            </div>
+          <div id="product-container">
+            <p>Loading products...</p>
+          </div>
         </div>
-    </section>
-</main>
+      </section>
+    </main>
 
-<footer class="bg-black text-white py-12">
-    <div class="container mx-auto px-4 text-center">
-        <p class="text-gray-400">&copy; 2025 Rifakat Shoe Garden. All Rights Reserved.</p>
-    </div>
-</footer>
+    <footer class="bg-black text-white py-12">
+      <div class="container mx-auto px-4 text-center">
+        <p class="text-gray-400">
+          &copy; 2025 Rifakat Shoe Garden. All Rights Reserved.
+        </p>
+      </div>
+    </footer>
+    <script src="js/config.js"></script>
 
-<script src="js/app.js"></script>
+    <script src="js/app.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-      setTimeout(() => {
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => {
           const lightbox = GLightbox({
-              selector: '.glightbox'
+            selector: ".glightbox",
           });
-      }, 500);
-  });
-</script>
-</body>
+        }, 500);
+      });
+    </script>
+  </body>
 </html>
