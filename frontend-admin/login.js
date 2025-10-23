@@ -1,15 +1,16 @@
 // frontend-admin/login.js
 
 document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("login-form");
-
-  // --- FIX: Use config.js for API URL ---
-  if (typeof config === 'undefined') {
-    alert("CRITICAL ERROR: config.js is not loaded. Admin panel will not work.");
+  // Check if already logged in
+  const token = localStorage.getItem("authToken");
+  if (token) {
+    // Already logged in, redirect to dashboard
+    window.location.href = "dashboard.html";
     return;
   }
+
+  const loginForm = document.getElementById("login-form");
   const API_URL = `${config.API_URL}/auth/login`;
-  // --- END FIX ---
  
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault(); // Prevent the page from reloading
@@ -34,10 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
 
       if (response.ok) {
-        // --- FIX: Store the token in localStorage ---
+        // Store the token in localStorage
         localStorage.setItem("authToken", data.token);
 
-        // If login is successful, redirect to the dashboard
+        // Redirect to dashboard (NOT product-form)
         window.location.href = "dashboard.html";
       } else {
         // If login fails, show an error message

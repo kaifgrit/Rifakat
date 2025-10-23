@@ -5,16 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // --- FIX: Use config.js for API URL ---
-  if (typeof config === 'undefined') {
-    alert("CRITICAL ERROR: config.js is not loaded. Admin panel will not work.");
-    window.location.href = "login.html";
-    return;
-  }
-  const API_URL = `${config.API_URL}/products`;
-  const UPLOAD_URL = `${config.API_URL}/upload`;
-  // --- END FIX ---
-
+  const API_URL = "http://localhost:5000/api/products";
+  const UPLOAD_URL = "http://localhost:5000/api/upload";
   const form = document.getElementById("product-form");
   const formTitle = document.getElementById("form-title");
   const productIdInput = document.getElementById("productId");
@@ -51,6 +43,79 @@ document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
   productId = params.get("id");
   editMode = productId != null;
+
+  // Handle dynamic brand addition
+  const brandSelect = document.getElementById("brand");
+  const customBrandContainer = document.getElementById("custom-brand-container");
+  const customBrandInput = document.getElementById("custom-brand-input");
+  
+  // Load saved custom brands from localStorage
+  const loadCustomBrands = () => {
+    const savedBrands = JSON.parse(localStorage.getItem("customBrands") || "[]");
+    savedBrands.forEach(brand => {
+      // Check if brand already exists in dropdown
+      const exists = Array.from(brandSelect.options).some(opt => opt.value === brand);
+      if (!exists) {
+        const option = document.createElement("option");
+        option.value = brand;
+        option.textContent = brand;
+        // Insert before "Add New Brand" option
+        brandSelect.insertBefore(option, brandSelect.lastElementChild);
+      }
+    });
+  };
+  
+  loadCustomBrands();
+  
+  // Show/hide custom brand input based on selection
+  brandSelect.addEventListener("change", (e) => {
+    if (e.target.value === "__OTHER__") {
+      customBrandContainer.classList.add("show");
+      customBrandInput.focus();
+    } else {
+      customBrandContainer.classList.remove("show");
+      customBrandInput.value = "";
+    }
+  });
+  
+  // Add new brand to dropdown when user types
+  customBrandInput.addEventListener("blur", () => {
+    const newBrand = customBrandInput.value.trim();
+    if (newBrand) {
+      // Capitalize first letter of each word
+      const formattedBrand = newBrand
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+      
+      // Check if brand already exists
+      const exists = Array.from(brandSelect.options).some(
+        opt => opt.value.toLowerCase() === formattedBrand.toLowerCase()
+      );
+      
+      if (!exists) {
+        // Add to dropdown
+        const option = document.createElement("option");
+        option.value = formattedBrand;
+        option.textContent = formattedBrand;
+        brandSelect.insertBefore(option, brandSelect.lastElementChild);
+        
+        // Save to localStorage
+        const savedBrands = JSON.parse(localStorage.getItem("customBrands") || "[]");
+        savedBrands.push(formattedBrand);
+        localStorage.setItem("customBrands", JSON.stringify(savedBrands));
+        
+        if (typeof showMessage === "function") {
+          showMessage(`Brand "${formattedBrand}" added successfully!`, "success");
+        }
+      }
+      
+      // Select the new brand
+      brandSelect.value = formattedBrand;
+      customBrandContainer.classList.remove("show");
+      customBrandInput.value = "";
+    }
+  });
 
   const addColorVariationFields = (color = {}) => {
     colorCounter++;
@@ -278,6 +343,12 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     submitButton.disabled = true;
     submitButton.textContent = "Saving...";
+
+    // Check if custom brand input is being used
+    if (brandSelect.value === "__OTHER__" && customBrandInput.value.trim()) {
+      customBrandInput.blur(); // Trigger the blur event to add brand
+      await new Promise(resolve => setTimeout(resolve, 100)); // Wait for brand to be added
+    }
 
     const colors = [];
     let hasError = false;

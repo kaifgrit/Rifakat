@@ -5,6 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Manage Product - Rifakat Shoe Garden</title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+      #custom-brand-container {
+        display: none;
+        margin-top: 10px;
+        padding: 15px;
+        background-color: #f0f7ff;
+        border-radius: 8px;
+        border: 2px dashed var(--primary-color);
+      }
+      
+      #custom-brand-container.show {
+        display: block;
+        animation: slideDown 0.3s ease-out;
+      }
+      
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      #custom-brand-input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 1rem;
+        margin-top: 8px;
+      }
+      
+      #custom-brand-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(234, 85, 59, 0.1);
+      }
+    </style>
   </head>
   <body>
     <div class="form-container">
@@ -17,6 +58,7 @@
           <input type="text" id="productName" required />
         </div>
         
+        <!-- IMPROVED BRAND FIELD WITH DYNAMIC ADDITION -->
         <div class="form-group">
           <label for="brand">Brand</label>
           <select id="brand">
@@ -28,10 +70,27 @@
             <option value="New Balance">New Balance</option>
             <option value="Converse">Converse</option>
             <option value="Vans">Vans</option>
-            <option value="Other">Other (Non-Branded)</option>
+            <option value="__OTHER__">➕ Add New Brand</option>
           </select>
+          
+          <!-- Custom brand input (hidden by default) -->
+          <div id="custom-brand-container">
+            <label for="custom-brand-input" style="font-weight: 600; color: var(--primary-color); margin-bottom: 5px; display: block;">
+              Enter New Brand Name:
+            </label>
+            <input 
+              type="text" 
+              id="custom-brand-input" 
+              placeholder="e.g., Skechers, Fila, etc."
+              maxlength="50"
+            />
+            <small style="color: #666; display: block; margin-top: 5px;">
+              This brand will be added to the dropdown for future use
+            </small>
+          </div>
+          
           <small style="color: #666; font-size: 0.85rem; margin-top: 4px; display: block;">
-            Select "Other" for non-branded shoes
+            Select "Add New Brand" to add a custom brand name
           </small>
         </div>
         
@@ -63,7 +122,7 @@
         <a href="dashboard.html" class="btn btn-link">Cancel</a>
       </form>
     </div>
-    <script src="utils.js"></script>
+    <script src="/frontend-admin/utils.js"></script>
     <script src="form.js"></script>
   </body>
 </html>

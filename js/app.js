@@ -1,4 +1,4 @@
-// js/app.js - FINAL VERSION WITH SIZE SELECTION
+// js/app.js - FINAL VERSION WITH SIZE BUTTONS
 
 document.addEventListener("DOMContentLoaded", () => {
   if (typeof config === 'undefined') {
@@ -51,16 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
       displayProducts(products);
     } catch (error) {
       console.error("Failed to fetch products:", error);
-      
-      // FIX: Update heading on error
-      if (pageTitleElement) {
-        pageTitleElement.textContent = "Error Loading Collection";
-        const descElement = pageTitleElement.nextElementSibling;
-        if (descElement) {
-          descElement.textContent = "Could not connect to the server.";
-        }
-      }
-      
       productContainer.innerHTML =
         '<p class="text-center text-red-500">Could not load products. Please ensure the backend server is running and accessible.</p>';
     }
@@ -139,20 +129,19 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
     `).join("");
 
-    // Build size selector (only if sizes exist)
-    let sizeSelectHTML = '';
+    // Build size BUTTONS (instead of dropdown)
+    let sizeButtonsHTML = '';
     if (initialSizes.length > 0) {
-      const sizeOptions = initialSizes.map(size => 
-        `<option value="${size}">Size ${size}</option>`
+      const sizeButtons = initialSizes.map(size => 
+        `<button class="size-button" data-size="${size}" type="button">${size}</button>`
       ).join('');
       
-      sizeSelectHTML = `
-        <div class="size-selector-container mt-3 mb-2">
-          <label class="text-sm font-semibold text-gray-700 block mb-1">Select Size:</label>
-          <select class="size-selector w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-red-500 transition-colors">
-            <option value="">-- Choose Size --</option>
-            ${sizeOptions}
-          </select>
+      sizeButtonsHTML = `
+        <div class="size-buttons-container mt-3 mb-2">
+          <label class="text-sm font-semibold text-gray-700 block mb-2 text-center">Select Size:</label>
+          <div class="size-buttons-grid">
+            ${sizeButtons}
+          </div>
         </div>
       `;
     }
@@ -169,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="p-6 flex-grow flex flex-col text-center">
         <h3 class="text-xl font-bold product-name">${product.productName}</h3>
         <div class="color-swatches">${colorSwatchesHTML}</div>
-        ${sizeSelectHTML}
+        ${sizeButtonsHTML}
         <p class="text-lg font-semibold mt-2 mb-4 product-price">₹${product.price}</p>
         <button class="buy-button mt-auto cta-button block text-white font-bold py-2 px-4 rounded-full uppercase tracking-wider">
           Buy on WhatsApp
@@ -183,8 +172,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const card = e.target.closest(".product-card");
     if (!card) return;
 
+    // Handle SIZE BUTTON click
+    if (e.target.matches(".size-button")) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Remove active class from all size buttons in this card
+      card.querySelectorAll(".size-button").forEach(btn => btn.classList.remove("active"));
+      
+      // Add active class to clicked button
+      e.target.classList.add("active");
+    }
     // Handle color swatch click
-    if (e.target.matches(".color-swatch")) {
+    else if (e.target.matches(".color-swatch")) {
       e.preventDefault();
       e.stopPropagation();
       
@@ -204,15 +204,15 @@ document.addEventListener("DOMContentLoaded", () => {
         mainImage.alt = `${card.dataset.productName} - ${selectedColor.colorName}`;
       }
 
-      // Update size selector with new color's sizes
-      const sizeSelector = card.querySelector(".size-selector");
-      if (sizeSelector && selectedColor.sizes && selectedColor.sizes.length > 0) {
-        const sizeOptions = selectedColor.sizes.map(size => 
-          `<option value="${size}">Size ${size}</option>`
+      // Update size BUTTONS with new color's sizes
+      const sizeButtonsContainer = card.querySelector(".size-buttons-grid");
+      if (sizeButtonsContainer && selectedColor.sizes && selectedColor.sizes.length > 0) {
+        const sizeButtons = selectedColor.sizes.map(size => 
+          `<button class="size-button" data-size="${size}" type="button">${size}</button>`
         ).join('');
-        sizeSelector.innerHTML = `<option value="">-- Choose Size --</option>${sizeOptions}`;
-      } else if (sizeSelector) {
-        sizeSelector.innerHTML = '<option value="">No sizes available</option>';
+        sizeButtonsContainer.innerHTML = sizeButtons;
+      } else if (sizeButtonsContainer) {
+        sizeButtonsContainer.innerHTML = '<span class="text-gray-500 text-sm">No sizes available</span>';
       }
     } 
     // Handle image click - open lightbox
@@ -250,23 +250,25 @@ document.addEventListener("DOMContentLoaded", () => {
       const productColors = JSON.parse(card.dataset.productColors);
       const colorName = productColors[activeSwatchIndex]?.colorName || "Default";
 
-      // Get selected size
-      const sizeSelector = card.querySelector(".size-selector");
+      // Get selected size from active button
+      const activeSizeButton = card.querySelector(".size-button.active");
       let selectedSize = "";
-      if (sizeSelector) {
-        selectedSize = sizeSelector.value;
-        
-        // --- FIX: Corrected variable typo 'activeSwaTchIndex' to 'activeSwatchIndex' ---
+      
+      if (activeSizeButton) {
+        selectedSize = activeSizeButton.dataset.size;
+      } else {
+        // Check if sizes exist for this color
         const hasSizes = productColors[activeSwatchIndex]?.sizes?.length > 0;
-        // --- END FIX ---
-        
-        if (hasSizes && !selectedSize) {
+        if (hasSizes) {
           alert("Please select a size before purchasing.");
-          sizeSelector.focus();
-          sizeSelector.classList.add("border-red-500");
-          setTimeout(() => {
-            sizeSelector.classList.remove("border-red-500");
-          }, 2000);
+          // Add shake animation to size buttons
+          const sizeContainer = card.querySelector(".size-buttons-container");
+          if (sizeContainer) {
+            sizeContainer.classList.add("shake-animation");
+            setTimeout(() => {
+              sizeContainer.classList.remove("shake-animation");
+            }, 600);
+          }
           return;
         }
       }
