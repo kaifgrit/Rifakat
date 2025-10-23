@@ -5,8 +5,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const API_URL = "http://localhost:5000/api/products";
-  const UPLOAD_URL = "http://localhost:5000/api/upload";
+  // --- FIX: Use config.js for API URL ---
+  if (typeof config === 'undefined') {
+    alert("CRITICAL ERROR: config.js is not loaded. Admin panel will not work.");
+    window.location.href = "login.html";
+    return;
+  }
+  const API_URL = `${config.API_URL}/products`;
+  const UPLOAD_URL = `${config.API_URL}/upload`;
+  // --- END FIX ---
+
   const form = document.getElementById("product-form");
   const formTitle = document.getElementById("form-title");
   const productIdInput = document.getElementById("productId");
@@ -50,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     colorItem.classList.add("color-variation-item");
     
     const imageUrls = color.imageUrls || (color.imageUrl ? [color.imageUrl] : []);
+    const existingSizes = color.sizes || [];
     
     const existingImagesHTML = imageUrls.map((url, idx) => `
       <div class="uploaded-image-item" data-image-url="${url}">
@@ -57,6 +66,18 @@ document.addEventListener("DOMContentLoaded", () => {
         <button type="button" class="btn-remove-image" data-url="${url}">×</button>
       </div>
     `).join('');
+    
+    // Generate size checkboxes
+    const availableSizes = ["6", "7", "8", "9", "10", "11", "12"];
+    const sizeCheckboxesHTML = availableSizes.map(size => {
+      const isChecked = existingSizes.includes(size) ? 'checked' : '';
+      return `
+        <label class="size-checkbox-label">
+          <input type="checkbox" class="size-checkbox" value="${size}" ${isChecked}>
+          <span>Size ${size}</span>
+        </label>
+      `;
+    }).join('');
     
     colorItem.innerHTML = `
       <h4>Color Variation #${colorCounter}</h4>
@@ -78,6 +99,13 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="upload-status"></div>
         <input type="hidden" class="imageUrls" value='${JSON.stringify(imageUrls)}'>
       </div>
+      <div class="form-group">
+        <label>Available Sizes</label>
+        <p class="text-sm text-gray-600 mb-2">Select all available sizes for this color</p>
+        <div class="size-checkboxes-container">
+          ${sizeCheckboxesHTML}
+        </div>
+      </div>
       <button type="button" class="btn-delete-color">Remove Color</button>
     `;
     colorContainer.appendChild(colorItem);
@@ -86,12 +114,10 @@ document.addEventListener("DOMContentLoaded", () => {
   addColorBtn.addEventListener("click", () => addColorVariationFields());
 
   colorContainer.addEventListener("click", (e) => {
-    // Remove entire color variation
     if (e.target.classList.contains("btn-delete-color")) {
       e.target.closest(".color-variation-item").remove();
     }
     
-    // Remove individual image
     if (e.target.classList.contains("btn-remove-image")) {
       e.preventDefault();
       const imageItem = e.target.closest(".uploaded-image-item");
@@ -99,12 +125,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const parentItem = e.target.closest('.color-variation-item');
       const imageUrlsInput = parentItem.querySelector('.imageUrls');
       
-      // Update hidden input
       let urls = JSON.parse(imageUrlsInput.value || '[]');
       urls = urls.filter(url => url !== urlToRemove);
       imageUrlsInput.value = JSON.stringify(urls);
       
-      // Remove from DOM
       imageItem.remove();
       
       if (typeof showMessage === "function") {
@@ -128,7 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const maxSizeInMB = 5;
       const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
 
-      // Validate all files
       for (const file of files) {
         if (!allowedTypes.includes(file.type)) {
           if (typeof showMessage === "function") {
@@ -183,7 +206,6 @@ document.addEventListener("DOMContentLoaded", () => {
           const data = await response.json();
           currentUrls.push(data.imageUrl);
           
-          // Add to display
           const imageItem = document.createElement('div');
           imageItem.className = 'uploaded-image-item';
           imageItem.dataset.imageUrl = data.imageUrl;
@@ -210,7 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       uploadInput.disabled = false;
-      uploadInput.value = null; // Clear input
+      uploadInput.value = null;
       submitButton.disabled = false;
       
       setTimeout(() => {
@@ -271,10 +293,15 @@ document.addEventListener("DOMContentLoaded", () => {
         hasError = true;
       }
       
+      // Collect selected sizes
+      const selectedSizes = Array.from(item.querySelectorAll(".size-checkbox:checked"))
+        .map(checkbox => checkbox.value);
+      
       colors.push({
         colorName: item.querySelector(".colorName").value,
         colorHexCode: item.querySelector(".colorHexCode").value,
         imageUrls: imageUrls,
+        sizes: selectedSizes // NEW: Include sizes
       });
     });
 
@@ -296,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const url = editMode ? `${API_URL}/${productId}` : API_URL;
       const method = editMode ? "PUT" : "POST";
       
-      console.log("Submitting product data:", productData); // Debug log
+      console.log("Submitting product data:", productData);
       
       const response = await fetch(url, {
         method: method,
@@ -304,11 +331,11 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify(productData),
       });
 
-      console.log("Response status:", response.status); // Debug log
+      console.log("Response status:", response.status);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ message: "Unknown error" }));
-        console.error("Server error response:", errorData); // Debug log
+        console.error("Server error response:", errorData);
         
         if (response.status === 401 || response.status === 403) {
           handleAuthError(response);

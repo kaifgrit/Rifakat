@@ -2,8 +2,14 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
-  // We will replace this hardcoded URL in a later task
- const API_URL = `${config.API_URL}/auth/login`;
+
+  // --- FIX: Use config.js for API URL ---
+  if (typeof config === 'undefined') {
+    alert("CRITICAL ERROR: config.js is not loaded. Admin panel will not work.");
+    return;
+  }
+  const API_URL = `${config.API_URL}/auth/login`;
+  // --- END FIX ---
  
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault(); // Prevent the page from reloading

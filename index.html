@@ -433,19 +433,23 @@
           From Our Collection
         </h2>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <a href="sneakers.html"
-            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll">
+          <a href="/assets/main_page_image_1.jpg"
+            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
+            data-gallery="collection-gallery"
+            data-title="Nike Air Max Fly - ₹799">
             <img src="/assets/main_page_image_1.jpg" alt="Nike Air Max Fly" class="w-full h-full object-cover" />
             <div class="overlay absolute inset-0 flex items-end p-4 text-white">
               <div class="overlay-content">
                 <p class="text-sm font-light text-gray-300">Sneaker</p>
                 <p class="font-bold text-lg">Nike Air Max Fly</p>
-                <p class="text-md font-semibold mt-1">799</p>
+                <p class="text-md font-semibold mt-1">₹799</p>
               </div>
             </div>
           </a>
-          <a href="boots.html"
-            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll"
+          <a href="/assets/main_page_image_2.jpg"
+            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
+            data-gallery="collection-gallery"
+            data-title="Brown leather boots - ₹1,799"
             style="transition-delay: 100ms">
             <img src="/assets/main_page_image_2.jpg" alt="Classic Oxford" class="w-full h-full object-cover" />
             <div class="overlay absolute inset-0 flex items-end p-4 text-white">
@@ -456,8 +460,10 @@
               </div>
             </div>
           </a>
-          <a href="formal.html"
-            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll"
+          <a href="/assets/main_page_image_3.jpg"
+            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
+            data-gallery="collection-gallery"
+            data-title="Brown Sneaker - ₹1,499"
             style="transition-delay: 200ms">
             <img src="/assets/main_page_image_3.jpg" alt="Leather Sandal" class="w-full h-full object-cover" />
             <div class="overlay absolute inset-0 flex items-end p-4 text-white">
@@ -468,8 +474,10 @@
               </div>
             </div>
           </a>
-          <a href="sneakers.html"
-            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll"
+          <a href="/assets/main_page_image_4.jpg"
+            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
+            data-gallery="collection-gallery"
+            data-title="Nike Sneaker - ₹2,800"
             style="transition-delay: 300ms">
             <img src="/assets/main_page_image_4.jpg" alt="Suede Boot" class="w-full h-full object-cover" />
             <div class="overlay absolute inset-0 flex items-end p-4 text-white">
@@ -480,8 +488,10 @@
               </div>
             </div>
           </a>
-          <a href="sandals.html"
-            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll"
+          <a href="/assets/main_page_image_7.jpg"
+            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
+            data-gallery="collection-gallery"
+            data-title="Men Sandel - ₹2,499"
             style="transition-delay: 400ms">
             <img src="/assets/main_page_image_7.jpg" class="w-full h-full object-cover" />
             <div class="overlay absolute inset-0 flex items-end p-4 text-white">
@@ -492,8 +502,10 @@
               </div>
             </div>
           </a>
-          <a href="slippers.html"
-            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll"
+          <a href="/assets/main_page_image_5.jpg"
+            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
+            data-gallery="collection-gallery"
+            data-title="Casual - ₹900"
             style="transition-delay: 500ms">
             <img src="/assets/main_page_image_5.jpg" alt="Tassel Loafer" class="w-full h-full object-cover" />
             <div class="overlay absolute inset-0 flex items-end p-4 text-white">
@@ -588,7 +600,7 @@
         <a href="frontend-admin/login.html"
           class="text-sm text-gray-500 hover:text-[var(--accent-red)] transition-colors">Admin Panel</a>
       </div>
-    </div>
+      </div>
   </footer>
 
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
@@ -696,19 +708,13 @@
 
   <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
   <script>
-    // Initialize GLightbox after app.js loads products
+    // Initialize GLightbox
     document.addEventListener('DOMContentLoaded', () => {
-      // Wait a brief moment to ensure products are rendered by app.js
-      setTimeout(() => {
-        const lightbox = GLightbox({
-          selector: '.glightbox' // Use the class we'll add in app.js
-        });
-      }, 500); // Adjust delay if needed
+      const lightbox = GLightbox({
+        selector: '.glightbox'
+      });
     });
   </script>
-</body>
-
-</html>
 </body>
 
 </html>

@@ -1,4 +1,4 @@
-// js/app.js
+// js/app.js - FINAL VERSION WITH SIZE SELECTION
 
 document.addEventListener("DOMContentLoaded", () => {
   if (typeof config === 'undefined') {
@@ -51,6 +51,16 @@ document.addEventListener("DOMContentLoaded", () => {
       displayProducts(products);
     } catch (error) {
       console.error("Failed to fetch products:", error);
+      
+      // FIX: Update heading on error
+      if (pageTitleElement) {
+        pageTitleElement.textContent = "Error Loading Collection";
+        const descElement = pageTitleElement.nextElementSibling;
+        if (descElement) {
+          descElement.textContent = "Could not connect to the server.";
+        }
+      }
+      
       productContainer.innerHTML =
         '<p class="text-center text-red-500">Could not load products. Please ensure the backend server is running and accessible.</p>';
     }
@@ -71,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return acc;
     }, {});
 
-    const brandOrder = ["Nike", "Adidas", "Puma"];
+    const brandOrder = ["Nike", "Adidas", "Puma", "Reebok", "New Balance", "Converse", "Vans"];
     const sortedBrands = Object.keys(productsByBrand).sort((a, b) => {
       if (a === "Other") return 1;
       if (b === "Other") return -1;
@@ -114,10 +124,12 @@ document.addEventListener("DOMContentLoaded", () => {
     card.dataset.productPrice = product.price;
     card.dataset.productColors = JSON.stringify(product.colors);
 
-    // Handle BOTH imageUrls (array) AND imageUrl (single)
     const urls = product.colors[0].imageUrls || (product.colors[0].imageUrl ? [product.colors[0].imageUrl] : []);
     const firstImageUrl = urls[0] || '';
 
+    // Get sizes for first color
+    const initialSizes = product.colors[0].sizes || [];
+    
     // Build color swatches
     const colorSwatchesHTML = product.colors.map((color, index) => `
         <button class="color-swatch ${index === 0 ? "active" : ""}" 
@@ -127,18 +139,37 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
     `).join("");
 
+    // Build size selector (only if sizes exist)
+    let sizeSelectHTML = '';
+    if (initialSizes.length > 0) {
+      const sizeOptions = initialSizes.map(size => 
+        `<option value="${size}">Size ${size}</option>`
+      ).join('');
+      
+      sizeSelectHTML = `
+        <div class="size-selector-container mt-3 mb-2">
+          <label class="text-sm font-semibold text-gray-700 block mb-1">Select Size:</label>
+          <select class="size-selector w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-red-500 transition-colors">
+            <option value="">-- Choose Size --</option>
+            ${sizeOptions}
+          </select>
+        </div>
+      `;
+    }
+
     card.innerHTML = `
       <div class="product-image-container relative overflow-hidden h-64 cursor-pointer">
         <img src="${firstImageUrl}" 
              alt="${product.productName}" 
              class="main-product-image w-full h-full object-cover transition-transform duration-300">
         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-          <h3 class="text-white text-2xl font-bold text-center p-4">${product.productName}</h3>
+          <h3 class="text-white text-2xl font-bold text-center p-4">View Product</h3>
         </div>
       </div>
       <div class="p-6 flex-grow flex flex-col text-center">
         <h3 class="text-xl font-bold product-name">${product.productName}</h3>
         <div class="color-swatches">${colorSwatchesHTML}</div>
+        ${sizeSelectHTML}
         <p class="text-lg font-semibold mt-2 mb-4 product-price">₹${product.price}</p>
         <button class="buy-button mt-auto cta-button block text-white font-bold py-2 px-4 rounded-full uppercase tracking-wider">
           Buy on WhatsApp
@@ -172,8 +203,19 @@ document.addEventListener("DOMContentLoaded", () => {
         mainImage.src = urls[0];
         mainImage.alt = `${card.dataset.productName} - ${selectedColor.colorName}`;
       }
+
+      // Update size selector with new color's sizes
+      const sizeSelector = card.querySelector(".size-selector");
+      if (sizeSelector && selectedColor.sizes && selectedColor.sizes.length > 0) {
+        const sizeOptions = selectedColor.sizes.map(size => 
+          `<option value="${size}">Size ${size}</option>`
+        ).join('');
+        sizeSelector.innerHTML = `<option value="">-- Choose Size --</option>${sizeOptions}`;
+      } else if (sizeSelector) {
+        sizeSelector.innerHTML = '<option value="">No sizes available</option>';
+      }
     } 
-    // Handle image click - open lightbox with all images of selected color
+    // Handle image click - open lightbox
     else if (e.target.closest(".product-image-container")) {
       e.preventDefault();
       e.stopPropagation();
@@ -182,17 +224,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const productColors = JSON.parse(card.dataset.productColors);
       const selectedColor = productColors[activeSwatchIndex];
       
-      // Get all images for this color
       const urls = selectedColor.imageUrls || (selectedColor.imageUrl ? [selectedColor.imageUrl] : []);
       
-      // Create lightbox elements
       const lightboxElements = urls.map(url => ({
         href: url,
         type: 'image',
         title: `${card.dataset.productName} - ${selectedColor.colorName}`
       }));
       
-      // Destroy existing instance and create new one
       if (glightboxInstance) glightboxInstance.destroy();
       glightboxInstance = GLightbox({
         elements: lightboxElements,
@@ -211,7 +250,34 @@ document.addEventListener("DOMContentLoaded", () => {
       const productColors = JSON.parse(card.dataset.productColors);
       const colorName = productColors[activeSwatchIndex]?.colorName || "Default";
 
-      const message = `Hello, I'm interested in buying:\n\n*Product:* ${productName}\n*Color:* ${colorName}\n*Price:* ₹${productPrice}`;
+      // Get selected size
+      const sizeSelector = card.querySelector(".size-selector");
+      let selectedSize = "";
+      if (sizeSelector) {
+        selectedSize = sizeSelector.value;
+        
+        // --- FIX: Corrected variable typo 'activeSwaTchIndex' to 'activeSwatchIndex' ---
+        const hasSizes = productColors[activeSwatchIndex]?.sizes?.length > 0;
+        // --- END FIX ---
+        
+        if (hasSizes && !selectedSize) {
+          alert("Please select a size before purchasing.");
+          sizeSelector.focus();
+          sizeSelector.classList.add("border-red-500");
+          setTimeout(() => {
+            sizeSelector.classList.remove("border-red-500");
+          }, 2000);
+          return;
+        }
+      }
+
+      // Build WhatsApp message
+      let message = `Hello, I'm interested in buying:\n\n*Product:* ${productName}\n*Color:* ${colorName}`;
+      if (selectedSize) {
+        message += `\n*Size:* ${selectedSize}`;
+      }
+      message += `\n*Price:* ₹${productPrice}`;
+
       const whatsappURL = `https://wa.me/919050211616?text=${encodeURIComponent(message)}`;
       window.open(whatsappURL, "_blank");
     }

@@ -7,7 +7,15 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const API_URL = "http://localhost:5000/api/products";
+  // --- FIX: Use config.js for API URL ---
+  if (typeof config === 'undefined') {
+    alert("CRITICAL ERROR: config.js is not loaded. Admin panel will not work.");
+    window.location.href = "login.html";
+    return;
+  }
+  const API_URL = `${config.API_URL}/products`;
+  // --- END FIX ---
+
   const productList = document.getElementById("product-list");
   const categoryFilter = document.getElementById("category-filter");
   const searchInput = document.getElementById("search-input"); // --- Get search input ---

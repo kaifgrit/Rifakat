@@ -16,13 +16,25 @@
           <label for="productName">Product Name</label>
           <input type="text" id="productName" required />
         </div>
-        <!-- NEW BRAND FIELD ADDED -->
+        
         <div class="form-group">
-          <label for="brand"
-            >Brand (e.g., Nike, Adidas, or leave blank for non-branded)</label
-          >
-          <input type="text" id="brand" />
+          <label for="brand">Brand</label>
+          <select id="brand">
+            <option value="">-- Select Brand --</option>
+            <option value="Nike">Nike</option>
+            <option value="Adidas">Adidas</option>
+            <option value="Puma">Puma</option>
+            <option value="Reebok">Reebok</option>
+            <option value="New Balance">New Balance</option>
+            <option value="Converse">Converse</option>
+            <option value="Vans">Vans</option>
+            <option value="Other">Other (Non-Branded)</option>
+          </select>
+          <small style="color: #666; font-size: 0.85rem; margin-top: 4px; display: block;">
+            Select "Other" for non-branded shoes
+          </small>
         </div>
+        
         <div class="form-group">
           <label for="category">Category</label>
           <select id="category" required>
@@ -51,8 +63,7 @@
         <a href="dashboard.html" class="btn btn-link">Cancel</a>
       </form>
     </div>
-    <script src="/frontend-admin/utils.js"></script>
-
+    <script src="utils.js"></script>
     <script src="form.js"></script>
   </body>
 </html>

@@ -10,11 +10,28 @@ dotenv.config();
 const app = express();
 const PORT = 5000;
 
-// Allow requests from your frontend (port 3000)
+// --- FIXED CORS CONFIGURATION ---
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://localhost:5500", // Added for common static servers
+  "http://127.0.0.1:5500", // Added for common static servers
+];
+
 app.use(cors({
-  origin: ["http://localhost:3000", "http://127.0.0.1:3000"],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or 'file://' origins)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = "The CORS policy for this site does not allow access from the specified Origin.";
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true
 }));
+// --- END FIX ---
 
 app.use(express.json());
 
