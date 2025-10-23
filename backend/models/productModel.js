@@ -3,24 +3,33 @@ const mongoose = require("mongoose");
 const colorSchema = new mongoose.Schema({
   colorName: { type: String, required: true },
   colorHexCode: { type: String },
-  // Support both old and new format
+  
+  // Array of image URLs for multiple angles
   imageUrls: { 
     type: [String],
-    default: undefined, // Allow it to be optional for backward compatibility
+    default: undefined,
     validate: {
       validator: function(v) {
-        // If imageUrls exists, it must have at least one URL
         return !v || v.length > 0;
       },
       message: 'If imageUrls is provided, at least one image URL is required'
     }
   },
+
+  // --- NEW FIELD ADDED ---
+  // Array of available sizes for this specific color
+  sizes: {
+    type: [String],
+    default: []
+  },
+  // --- END OF NEW FIELD ---
+
   // Keep old format for backward compatibility
   imageUrl: { 
     type: String,
     required: function() {
-      // imageUrl is required only if imageUrls is not provided
-      return !this.imageUrls || this.imageUrls.length === 0;
+      // imageUrl is required only if imageUrls and sizes are not provided
+      return (!this.imageUrls || this.imageUrls.length === 0);
     }
   }
 });

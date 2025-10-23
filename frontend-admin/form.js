@@ -5,8 +5,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const API_URL = "http://localhost:5000/api/products";
-  const UPLOAD_URL = "http://localhost:5000/api/upload";
+  // --- FIX: Use config.js for API URLs ---
+  if (typeof config === 'undefined') {
+    alert("CRITICAL ERROR: config.js is not loaded. Admin panel will not work.");
+    window.location.href = "login.html";
+    return;
+  }
+  const API_URL = `${config.API_URL}/products`;
+  const UPLOAD_URL = `${config.API_URL}/upload`;
+  // --- END FIX ---
+
   const form = document.getElementById("product-form");
   const formTitle = document.getElementById("form-title");
   const productIdInput = document.getElementById("productId");
