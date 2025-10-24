@@ -1,1105 +1,838 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rifakat Shoe Garden - Where Every Step Matters</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"
-    />
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/swiper/swiper-bundle.min.css"
-    />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-      :root {
-        --accent-red: #ea553b;
-        --accent-red-darker: #d44a32;
-        --neutral-light: #f8f9fa;
-        --text-primary: #1f2937;
-        --text-secondary: #4b5563;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rifakat Shoe Garden - Where Every Step Matters</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 
-      body {
-        font-family: "Poppins", sans-serif;
-        color: var(--text-primary);
-        overflow-x: hidden;
-      }
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --accent-red: #ea553b;
+      --accent-red-darker: #d44a32;
+      --neutral-light: #f8f9fa;
+      --text-primary: #1f2937;
+      --text-secondary: #4b5563;
+    }
 
-      html {
-        scroll-behavior: smooth;
-      }
+    body {
+      font-family: "Poppins", sans-serif;
+      color: var(--text-primary);
+      overflow-x: hidden;
+    }
 
-      .header {
-        transition: background-color 0.3s ease-in-out;
-      }
+    html {
+      scroll-behavior: smooth;
+    }
 
-      .header-scrolled {
-        background-color: rgba(0, 0, 0, 0.8);
-        backdrop-filter: blur(10px);
-      }
+    .header {
+      transition: background-color 0.3s ease-in-out;
+    }
 
-      .nav-link::after {
-        content: "";
-        display: block;
-        width: 0;
-        height: 2px;
-        background: var(--accent-red);
-        transition: width 0.3s;
-      }
+    .header-scrolled {
+      background-color: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+    }
 
-      .nav-link:hover::after {
-        width: 100%;
-      }
+    .nav-link::after {
+      content: "";
+      display: block;
+      width: 0;
+      height: 2px;
+      background: var(--accent-red);
+      transition: width 0.3s;
+    }
 
-      .hero-section {
-        background-image: url("/assets/BG_main.avif");
-      }
+    .nav-link:hover::after {
+      width: 100%;
+    }
 
-      .cta-button {
-        background-color: var(--accent-red);
-        transition: background-color 0.3s ease, transform 0.2s ease;
-      }
+    .hero-section {
+      background-image: url("/assets/BG_main.avif");
+    }
 
-      .cta-button:hover {
-        background-color: var(--accent-red-darker);
-        transform: translateY(-2px);
-      }
+    .cta-button {
+      background-color: var(--accent-red);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
 
-      .gallery-item .overlay {
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-      }
+    .cta-button:hover {
+      background-color: var(--accent-red-darker);
+      transform: translateY(-2px);
+    }
 
-      .gallery-item .overlay-content {
-        opacity: 0;
-        transform: translateY(10px);
-        transition: opacity 0.3s ease, transform 0.3s ease;
-        transition-delay: 0.1s;
-      }
+    .gallery-item .overlay {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    }
 
-      .gallery-item:hover .overlay,
-      .gallery-item:hover .overlay-content {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .gallery-item .overlay-content {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transition-delay: 0.1s;
+    }
 
-      .gallery-item img {
-        transition: transform 0.3s ease;
-      }
+    .gallery-item:hover .overlay,
+    .gallery-item:hover .overlay-content {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-      .gallery-item:hover img {
-        transform: scale(1.05);
-      }
+    .gallery-item img {
+      transition: transform 0.3s ease;
+    }
 
-      #mobile-menu {
-        transition: transform 0.3s ease-in-out;
-        transform: translateX(100%);
-      }
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
 
-      #mobile-menu.open {
-        transform: translateX(0);
-      }
+    #mobile-menu {
+      transition: transform 0.3s ease-in-out;
+      transform: translateX(100%);
+    }
 
-      .animate-on-scroll {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-      }
+    #mobile-menu.open {
+      transform: translateX(0);
+    }
 
-      .animate-on-scroll.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
 
-      .about-image-container {
-        position: relative;
-        padding-bottom: 75%;
-        height: 0;
-        overflow: hidden;
-        border-radius: 10px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      }
+    .animate-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-      .about-image-container img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-      }
-      .dropdown {
-        position: relative;
-      }
+    .about-image-container {
+      position: relative;
+      padding-bottom: 75%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
 
-      .dropdown-menu {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        background-color: white;
-        color: var(--text-primary);
-        border-radius: 8px;
-        padding: 0.5rem 0;
-        min-width: 160px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        z-index: 60;
-        opacity: 0;
-        transition: opacity 0.3s ease, transform 0.3s ease;
-        transform: translateX(-50%) translateY(10px);
-      }
+    .about-image-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
 
-      .dropdown:hover .dropdown-menu {
-        display: block;
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-      }
+    .dropdown {
+      position: relative;
+    }
 
-      .dropdown-item {
-        display: block;
-        padding: 0.75rem 1.5rem;
-        transition: background-color 0.2s ease;
-      }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      background-color: white;
+      color: var(--text-primary);
+      border-radius: 8px;
+      padding: 0.5rem 0;
+      min-width: 160px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      z-index: 60;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateX(-50%) translateY(10px);
+    }
 
-      .dropdown-item:hover {
-        background-color: var(--neutral-light);
-        color: var(--accent-red);
-      }
+    .dropdown:hover .dropdown-menu {
+      display: block;
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
 
+    .dropdown-item {
+      display: block;
+      padding: 0.75rem 1.5rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .dropdown-item:hover {
+      background-color: var(--neutral-light);
+      color: var(--accent-red);
+    }
+
+    .store-swiper {
+      /* Mobile-first (default): Use a 4:3 aspect ratio */
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 3;
+    }
+
+    @media (min-width: 768px) {
+
+      /* Desktop (md) and up: Switch to a 16:9 aspect ratio */
       .store-swiper {
-        /* Mobile-first (default): Use a 4:3 aspect ratio */
-        width: 100%;
-        height: auto;
-        aspect-ratio: 4 / 3;
+        aspect-ratio: 16 / 9;
+      }
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: var(--accent-red);
+    }
+
+    .swiper-pagination-bullet-active {
+      background-color: var(--accent-red);
+    }
+
+    .about-image-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+    }
+
+    .about-image-container {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      /* Limit maximum width */
+      margin: 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+    }
+
+    .about-image-container::before {
+      content: '';
+      display: block;
+      padding-bottom: 100%;
+      /* 1:1 Aspect Ratio - makes it square */
+    }
+
+    .about-image-container img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Ensures image covers the container without distortion */
+      object-position: center top;
+      /* Focuses on the top center of the image */
+    }
+
+    .about-content {
+      padding: 1rem 0;
+    }
+
+    /* Mobile Optimization */
+    @media (max-width: 768px) {
+      .about-image-container {
+        max-width: 280px;
+        /* Smaller on mobile */
+        margin-bottom: 1.5rem;
       }
 
-      @media (min-width: 768px) {
-        /* Desktop (md) and up: Switch to a 16:9 aspect ratio */
-        .store-swiper {
-          aspect-ratio: 16 / 9;
-        }
+      .about-image-container::before {
+        padding-bottom: 100%;
+        /* Keep square ratio on mobile */
       }
 
-      .swiper-button-next,
-      .swiper-button-prev {
-        color: var(--accent-red);
+      .about-content {
+        text-align: left;
+        padding: 0 0.5rem;
       }
 
-      .swiper-pagination-bullet-active {
-        background-color: var(--accent-red);
+      .about-content h2 {
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
       }
-      .about-image-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0;
-}
 
-.about-image-container {
-  position: relative;
-  width: 100%;
-  max-width: 400px; /* Limit maximum width */
-  margin: 0 auto;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
-}
+      .about-content p {
+        font-size: 0.95rem;
+        margin-bottom: 0.75rem;
+      }
+    }
 
-.about-image-container::before {
-  content: '';
-  display: block;
-  padding-bottom: 100%; /* 1:1 Aspect Ratio - makes it square */
-}
+    /* Tablet Optimization */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .about-image-container {
+        max-width: 350px;
+      }
+    }
 
-.about-image-container img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Ensures image covers the container without distortion */
-  object-position: center top; /* Focuses on the top center of the image */
-}
+    /* Desktop - Better Grid Balance */
+    @media (min-width: 1025px) {
+      #about .grid {
+        grid-template-columns: 0.9fr 1.1fr;
+        /* Slightly more space for text */
+        gap: 3rem;
+      }
+    }
 
-.about-content {
-  padding: 1rem 0;
-}
+    /* Animation Enhancement */
+    .about-image-container img {
+      transition: transform 0.5s ease;
+    }
 
-/* Mobile Optimization */
-@media (max-width: 768px) {
-  .about-image-container {
-    max-width: 280px; /* Smaller on mobile */
-    margin-bottom: 1.5rem;
-  }
-  
-  .about-image-container::before {
-    padding-bottom: 100%; /* Keep square ratio on mobile */
-  }
-  
-  .about-content {
-    text-align: left;
-    padding: 0 0.5rem;
-  }
-  
-  .about-content h2 {
-    font-size: 1.75rem;
-    margin-bottom: 1rem;
-  }
-  
-  .about-content p {
-    font-size: 0.95rem;
-    margin-bottom: 0.75rem;
-  }
-}
+    .about-image-container:hover img {
+      transform: scale(1.05);
+    }
+  </style>
+  </style>
+</head>
 
-/* Tablet Optimization */
-@media (min-width: 769px) and (max-width: 1024px) {
-  .about-image-container {
-    max-width: 350px;
-  }
-}
+<body class="bg-white">
+  <header id="header" class="header fixed top-0 left-0 right-0 z-50 p-4 text-white">
+    <div class="container mx-auto flex justify-between items-center">
+      <a href="#home">
+        <img class="h-12 w-auto" src="/assets/logo.jpg" alt="Rifakat Shoe Garden Logo" />
+      </a>
 
-/* Desktop - Better Grid Balance */
-@media (min-width: 1025px) {
-  #about .grid {
-    grid-template-columns: 0.9fr 1.1fr; /* Slightly more space for text */
-    gap: 3rem;
-  }
-}
+      <div class="text-lg font-bold tracking-wider md:hidden">
+        Rifakat Shoe Garden
+      </div>
 
-/* Animation Enhancement */
-.about-image-container img {
-  transition: transform 0.5s ease;
-}
+      <nav class="hidden md:flex items-center space-x-8">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#about" class="nav-link">About</a>
+        <div class="dropdown">
+          <a href="#categories" class="nav-link flex items-center">
+            Collection
+            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </a>
+          <div class="dropdown-menu">
+            <a href="sneakers.html" class="dropdown-item">Sneakers</a>
+            <a href="boots.html" class="dropdown-item">Boots</a>
+            <a href="sandals.html" class="dropdown-item">Sandals</a>
+            <a href="slippers.html" class="dropdown-item">Slippers</a>
+            <a href="formal.html" class="dropdown-item">Formal Shoes</a>
+          </div>
+        </div>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
 
-.about-image-container:hover img {
-  transform: scale(1.05);
-}
-</style>
-    </style>
-  </head>
+      <div class="hidden md:flex items-center space-x-4">
+        <a href="tel:+919050211616" aria-label="Call Us"
+          class="text-white hover:text-[var(--accent-red)] transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+          </svg>
+        </a>
+        <a href="https://wa.me/919050211616" aria-label="Contact on WhatsApp"
+          class="text-white hover:text-[var(--accent-red)] transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 4.315 1.731 6.086l.287.468-1.173 4.249 4.35-1.14z" />
+          </svg>
+        </a>
+        <a href="https://www.instagram.com/rifakatshoegarden?igsh=MTAydno5ZnF1d2dsag==" aria-label="Instagram"
+          class="text-white hover:text-[var(--accent-red)] transition-colors">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919 1.266-.058 1.644-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618 6.98-6.98.059-1.281.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98-1.281-.059-1.689-.073-4.948-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44 1.441-.645 1.441-1.44-.645-1.44-1.441-1.44z" />
+          </svg>
+        </a>
+        <a href="https://www.facebook.com/share/15tvpZXwLE/" aria-label="Facebook"
+          class="text-white hover:text-[var(--accent-red)] transition-colors">
+          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+          </svg>
+        </a>
+      </div>
 
-  <body class="bg-white">
-    <header
-      id="header"
-      class="header fixed top-0 left-0 right-0 z-50 p-4 text-white"
-    >
-      <div class="container mx-auto flex justify-between items-center">
-        <a href="#home">
-          <img
-            class="h-12 w-auto"
-            src="/assets/logo.jpg"
-            alt="Rifakat Shoe Garden Logo"
-          />
+      <button id="mobile-menu-button" class="md:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div id="mobile-menu"
+    class="fixed top-0 right-0 h-full w-3/4 bg-black bg-opacity-90 backdrop-blur-lg z-50 p-8 text-white flex flex-col items-center space-y-6">
+    <button id="close-menu-button" class="self-start text-3xl">×</button>
+    <a href="#home" class="text-2xl menu-link">Home</a>
+    <a href="#about" class="text-2xl menu-link">About</a>
+    <div class="w-full text-center">
+      <button id="mobile-collection-toggle" class="text-2xl menu-link w-full flex justify-center items-center">
+        Collection
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
+      <div id="mobile-collection-links" class="hidden mt-4 space-y-4">
+        <a href="sneakers.html" class="block text-xl text-gray-300 menu-link">Sneakers</a>
+        <a href="boots.html" class="block text-xl text-gray-300 menu-link">Boots</a>
+        <a href="sandals.html" class="block text-xl text-gray-300 menu-link">Sandals</a>
+        <a href="slippers.html" class="block text-xl text-gray-300 menu-link">Slippers</a>
+        <a href="formal.html" class="block text-xl text-gray-300 menu-link">Formal Shoes</a>
+      </div>
+    </div>
+    <a href="#contact" class="text-2xl menu-link">Contact</a>
+  </div>
+
+  <main>
+    <section id="home" class="hero-section h-screen bg-cover bg-center flex items-center justify-center text-white">
+      <div class="absolute inset-0 bg-black opacity-60"></div>
+      <div class="text-center z-10 p-4 animate-on-scroll">
+        <h1 class="text-5xl md:text-7xl font-bold mb-4">
+          Welcome to Rifakat Shoe Garden
+        </h1>
+        <p class="text-xl md:text-2xl mb-8 font-light">
+          Where Every Step Matters
+        </p>
+        <a href="#categories"
+          class="cta-button inline-block text-white font-bold py-3 px-8 rounded-full text-lg uppercase tracking-wider shadow-lg">
+          Explore Our Collection
         </a>
 
-        <div class="text-lg font-bold tracking-wider md:hidden">
-          Rifakat Shoe Garden
-        </div>
-
-        <nav class="hidden md:flex items-center space-x-8">
-          <a href="#home" class="nav-link">Home</a>
-          <a href="#about" class="nav-link">About</a>
-          <div class="dropdown">
-            <a href="#categories" class="nav-link flex items-center">
-              Collection
-              <svg
-                class="w-4 h-4 ml-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                ></path>
-              </svg>
-            </a>
-            <div class="dropdown-menu">
-              <a href="sneakers.html" class="dropdown-item">Sneakers</a>
-              <a href="boots.html" class="dropdown-item">Boots</a>
-              <a href="sandals.html" class="dropdown-item">Sandals</a>
-              <a href="slippers.html" class="dropdown-item">Slippers</a>
-              <a href="formal.html" class="dropdown-item">Formal Shoes</a>
-            </div>
-          </div>
-          <a href="#contact" class="nav-link">Contact</a>
-        </nav>
-
-        <div class="hidden md:flex items-center space-x-4">
-          <a
-            href="tel:+919050211616"
-            aria-label="Call Us"
-            class="text-white hover:text-[var(--accent-red)] transition-colors"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-              />
+        <div class="mt-12 flex justify-center items-center space-x-6 md:hidden">
+          <a href="tel:+919050211616" aria-label="Call Us"
+            class="text-white hover:text-[var(--accent-red)] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
             </svg>
           </a>
-          <a
-            href="https://wa.me/919050211616"
-            aria-label="Contact on WhatsApp"
-            class="text-white hover:text-[var(--accent-red)] transition-colors"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
+          <a href="https://wa.me/919050211616" aria-label="Contact on WhatsApp"
+            class="text-white hover:text-[var(--accent-red)] transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="currentColor" viewBox="0 0 24 24">
               <path
-                d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 4.315 1.731 6.086l.287.468-1.173 4.249 4.35-1.14z"
-              />
+                d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 4.315 1.731 6.086l.287.468-1.173 4.249 4.35-1.14z" />
             </svg>
           </a>
-          <a
-            href="https://www.instagram.com/rifakatshoegarden?igsh=MTAydno5ZnF1d2dsag=="
-            aria-label="Instagram"
-            class="text-white hover:text-[var(--accent-red)] transition-colors"
-          >
-            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919 1.266-.058 1.644-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618 6.98-6.98.059-1.281.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98-1.281-.059-1.689-.073-4.948-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44 1.441-.645 1.441-1.44-.645-1.44-1.441-1.44z"
-              />
-            </svg>
-          </a>
-          <a
-            href="https://www.facebook.com/share/15tvpZXwLE/"
-            aria-label="Facebook"
-            class="text-white hover:text-[var(--accent-red)] transition-colors"
-          >
+          <a href="https://www.instagram.com/rifakatshoegarden?igsh=MTAydno5ZnF1d2dsag==" aria-label="Instagram"
+            class="text-white hover:text-[var(--accent-red)] transition-colors">
             <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
               <path
-                d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"
-              />
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919 1.266-.058 1.644-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618 6.98-6.98.059-1.281.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98-1.281-.059-1.689-.073-4.948-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44 1.441-.645 1.441-1.44-.645-1.44-1.441-1.44z" />
+            </svg>
+          </a>
+          <a href="https://www.facebook.com/share/15tvpZXwLE/" aria-label="Facebook"
+            class="text-white hover:text-[var(--accent-red)] transition-colors">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
             </svg>
           </a>
         </div>
-
-        <button id="mobile-menu-button" class="md:hidden">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16m-7 6h7"
-            />
-          </svg>
-        </button>
       </div>
-    </header>
+    </section>
 
-    <div
-      id="mobile-menu"
-      class="fixed top-0 right-0 h-full w-3/4 bg-black bg-opacity-90 backdrop-blur-lg z-50 p-8 text-white flex flex-col items-center space-y-6"
-    >
-      <button id="close-menu-button" class="self-start text-3xl">×</button>
-      <a href="#home" class="text-2xl menu-link">Home</a>
-      <a href="#about" class="text-2xl menu-link">About</a>
-      <div class="w-full text-center">
-        <button
-          id="mobile-collection-toggle"
-          class="text-2xl menu-link w-full flex justify-center items-center"
-        >
-          Collection
-          <svg
-            class="w-5 h-5 ml-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            ></path>
-          </svg>
-        </button>
-        <div id="mobile-collection-links" class="hidden mt-4 space-y-4">
-          <a href="sneakers.html" class="block text-xl text-gray-300 menu-link"
-            >Sneakers</a
-          >
-          <a href="boots.html" class="block text-xl text-gray-300 menu-link"
-            >Boots</a
-          >
-          <a href="sandals.html" class="block text-xl text-gray-300 menu-link"
-            >Sandals</a
-          >
-          <a href="slippers.html" class="block text-xl text-gray-300 menu-link"
-            >Slippers</a
-          >
-          <a href="formal.html" class="block text-xl text-gray-300 menu-link"
-            >Formal Shoes</a
-          >
-        </div>
-      </div>
-      <a href="#contact" class="text-2xl menu-link">Contact</a>
-    </div>
-
-    <main>
-      <section
-        id="home"
-        class="hero-section h-screen bg-cover bg-center flex items-center justify-center text-white"
-      >
-        <div class="absolute inset-0 bg-black opacity-60"></div>
-        <div class="text-center z-10 p-4 animate-on-scroll">
-          <h1 class="text-5xl md:text-7xl font-bold mb-4">
-            Welcome to Rifakat Shoe Garden
-          </h1>
-          <p class="text-xl md:text-2xl mb-8 font-light">
-            Where Every Step Matters
-          </p>
-          <a
-            href="#categories"
-            class="cta-button inline-block text-white font-bold py-3 px-8 rounded-full text-lg uppercase tracking-wider shadow-lg"
-          >
-            Explore Our Collection
-          </a>
-
-          <div
-            class="mt-12 flex justify-center items-center space-x-6 md:hidden"
-          >
-            <a
-              href="tel:+919050211616"
-              aria-label="Call Us"
-              class="text-white hover:text-[var(--accent-red)] transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-7 w-7"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                />
-              </svg>
-            </a>
-            <a
-              href="https://wa.me/919050211616"
-              aria-label="Contact on WhatsApp"
-              class="text-white hover:text-[var(--accent-red)] transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-7 w-7"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 4.315 1.731 6.086l.287.468-1.173 4.249 4.35-1.14z"
-                />
-              </svg>
-            </a>
-            <a
-              href="https://www.instagram.com/rifakatshoegarden?igsh=MTAydno5ZnF1d2dsag=="
-              aria-label="Instagram"
-              class="text-white hover:text-[var(--accent-red)] transition-colors"
-            >
-              <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.011 3.584-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.691-4.919-4.919-.058-1.265-.069-1.645-.069-4.85s.011-3.584.069-4.85c.149-3.225 1.664-4.771 4.919-4.919 1.266-.058 1.644-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618 6.98-6.98.059-1.281.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98-1.281-.059-1.689-.073-4.948-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44 1.441-.645 1.441-1.44-.645-1.44-1.441-1.44z"
-                />
-              </svg>
-            </a>
-            <a
-              href="https://www.facebook.com/share/15tvpZXwLE/"
-              aria-label="Facebook"
-              class="text-white hover:text-[var(--accent-red)] transition-colors"
-            >
-              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section id="shop-carousel" class="py-16 md:py-24 bg-white">
-        <div class="container mx-auto px-4 text-center">
-          <h2 class="text-4xl font-bold mb-12 animate-on-scroll">Our Store</h2>
-          <div
-            class="swiper store-swiper rounded-lg shadow-xl overflow-hidden animate-on-scroll max-w-5xl mx-auto"
-          >
-            <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <img
-                  src="/assets/IMG_20250923_134613_172.jpg"
-                  alt="Interior view of the shoe store"
-                  class="w-full h-full object-cover"
-                />
-              </div>
-              <div class="swiper-slide">
-                <img
-                  src="/assets/IMG_3232.JPG"
-                  alt="Interior view of the shoe store"
-                  class="w-full h-full object-cover"
-                />
-              </div>
-              <div class="swiper-slide">
-                <img
-                  src="/assets/IMG_3990[1].JPG"
-                  alt="Interior view of the shoe store"
-                  class="w-full h-full object-cover"
-                />
-              </div>
-              <div class="swiper-slide">
-                <img
-                  src="/assets/WhatsApp Image 2025-10-22 at 21.54.12_f3c0da4e.jpg"
-                  alt="Wall of sneakers"
-                  class="w-full h-full object-cover"
-                />
-              </div>
-              <div class="swiper-slide">
-                <img
-                  src="/assets/WhatsApp Image 2025-10-22 at 21.54.18_b5297edf.jpg"
-                  alt="Shoe display close-up"
-                  class="w-full h-full object-cover"
-                />
-              </div>
-              <div class="swiper-slide">
-                <img
-                  src="/assets/IMG_20250923_134613_309.jpg"
-                  alt="Formal shoes section"
-                  class="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-            <div class="swiper-pagination"></div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-          </div>
-        </div>
-      </section>
-      <section id="about" class="py-16 md:py-20 bg-neutral-light">
-  <div class="container mx-auto px-4">
-    <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center animate-on-scroll">
-      
-      <!-- Image Container - LEFT SIDE -->
-      <div class="about-image-wrapper">
-        <div class="about-image-container">
-          <img src="assets/Owner_IMG.png" alt="Mr. Salim Khan - Owner of Rifakat Shoe Garden" loading="lazy" />
-        </div>
-      </div>
-
-      <!-- Content Container - RIGHT SIDE -->
-      <div class="about-content">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4 md:mb-6">Meet Mr. Salim Khan</h2>
-        <p class="text-base md:text-lg mb-3 md:mb-4 leading-relaxed" style="color: var(--text-secondary)">
-          With over <strong>15 years of experience</strong> in the footwear industry, Mr. Salim Khan founded 
-          <strong>Rifakat Shoe Garden</strong> in Nuh, Haryana, with a vision to bring quality, style, and 
-          comfort to every customer.
-        </p>
-        <p class="text-base md:text-lg mb-3 md:mb-4 leading-relaxed" style="color: var(--text-secondary)">
-          "At Rifakat Shoe Garden, we believe that the right pair of shoes can transform not just your outfit, 
-          but your entire day. Every shoe we offer is carefully selected to ensure it meets our standards of 
-          quality, durability, and style."
-        </p>
-        <p class="text-base md:text-lg leading-relaxed" style="color: var(--text-secondary)">
-          From <strong>Nike and Adidas</strong> to <strong>formal shoes and sandals</strong>, we curate collections 
-          that blend timeless elegance with modern trends. Visit us today and experience personalized service that 
-          puts your comfort first.
-        </p>
-        
-        <!-- Optional: Call to Action -->
-        <div class="mt-6 md:mt-8">
-          <a href="#contact" class="inline-block bg-[var(--accent-red)] text-white px-6 py-3 rounded-full font-semibold hover:bg-[var(--accent-red-darker)] transition-all duration-300 transform hover:-translate-y-1">
-            Visit Our Store
-          </a>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-      <section id="categories" class="py-16 md:py-24 bg-white">
-        <div class="container mx-auto px-4 text-center">
-          <h2 class="text-4xl font-bold mb-12 animate-on-scroll">
-            Featured Categories
-          </h2>
-          <div
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8"
-          >
-            <a
-              href="sneakers.html"
-              class="block bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300 animate-on-scroll"
-            >
-              <div class="text-5xl mb-4">👟</div>
-              <h3 class="text-2xl font-semibold mb-2">Sneakers</h3>
-            </a>
-            <a
-              href="boots.html"
-              class="block bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300 animate-on-scroll"
-              style="transition-delay: 100ms"
-            >
-              <div class="text-5xl mb-4">🥾</div>
-              <h3 class="text-2xl font-semibold mb-2">Boots</h3>
-            </a>
-            <a
-              href="sandals.html"
-              class="block bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300 animate-on-scroll"
-              style="transition-delay: 200ms"
-            >
-              <div class="text-5xl mb-4">👡</div>
-              <h3 class="text-2xl font-semibold mb-2">Sandals</h3>
-            </a>
-            <a
-              href="slippers.html"
-              class="block bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300 animate-on-scroll"
-              style="transition-delay: 300ms"
-            >
-              <div class="text-5xl mb-4">🩴</div>
-              <h3 class="text-2xl font-semibold mb-2">Slippers</h3>
-            </a>
-            <a
-              href="formal.html"
-              class="block bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300 animate-on-scroll"
-              style="transition-delay: 400ms"
-            >
-              <div class="text-5xl mb-4">👞</div>
-              <h3 class="text-2xl font-semibold mb-2">Formal Shoes</h3>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section id="gallery" class="py-16 md:py-24 bg-neutral-light">
-        <div class="container mx-auto px-4 text-center">
-          <h2 class="text-4xl font-bold mb-12 animate-on-scroll">
-            From Our Collection
-          </h2>
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <a
-              href="/assets/main_page_image_1.jpg"
-              class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
-              data-gallery="collection-gallery"
-              data-title="Nike Air Max Fly - ₹799"
-            >
-              <img
-                src="/assets/main_page_image_1.jpg"
-                alt="Nike Air Max Fly"
-                class="w-full h-full object-cover"
-              />
-              <div
-                class="overlay absolute inset-0 flex items-end p-4 text-white"
-              >
-                <div class="overlay-content">
-                  <p class="text-sm font-light text-gray-300">Sneaker</p>
-                  <p class="font-bold text-lg">Nike Air Max Fly</p>
-                  <p class="text-md font-semibold mt-1">₹799</p>
-                </div>
-              </div>
-            </a>
-            <a
-              href="/assets/main_page_image_2.jpg"
-              class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
-              data-gallery="collection-gallery"
-              data-title="Brown leather boots - ₹1,799"
-              style="transition-delay: 100ms"
-            >
-              <img
-                src="/assets/main_page_image_2.jpg"
-                alt="Classic Oxford"
-                class="w-full h-full object-cover"
-              />
-              <div
-                class="overlay absolute inset-0 flex items-end p-4 text-white"
-              >
-                <div class="overlay-content">
-                  <p class="text-sm font-light text-gray-300">Boots</p>
-                  <p class="font-bold text-lg">Brown leather boots</p>
-                  <p class="text-md font-semibold mt-1">₹1,799</p>
-                </div>
-              </div>
-            </a>
-            <a
-              href="/assets/main_page_image_3.jpg"
-              class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
-              data-gallery="collection-gallery"
-              data-title="Brown Sneaker - ₹1,499"
-              style="transition-delay: 200ms"
-            >
-              <img
-                src="/assets/main_page_image_3.jpg"
-                alt="Leather Sandal"
-                class="w-full h-full object-cover"
-              />
-              <div
-                class="overlay absolute inset-0 flex items-end p-4 text-white"
-              >
-                <div class="overlay-content">
-                  <p class="text-sm font-light text-gray-300">Formal Shoes</p>
-                  <p class="font-bold text-lg">Brown Sneaker</p>
-                  <p class="text-md font-semibold mt-1">₹1,499</p>
-                </div>
-              </div>
-            </a>
-            <a
-              href="/assets/main_page_image_4.jpg"
-              class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
-              data-gallery="collection-gallery"
-              data-title="Nike Sneaker - ₹2,800"
-              style="transition-delay: 300ms"
-            >
-              <img
-                src="/assets/main_page_image_4.jpg"
-                alt="Suede Boot"
-                class="w-full h-full object-cover"
-              />
-              <div
-                class="overlay absolute inset-0 flex items-end p-4 text-white"
-              >
-                <div class="overlay-content">
-                  <p class="text-sm font-light text-gray-300">Sneaker</p>
-                  <p class="font-bold text-lg">Nike Sneaker</p>
-                  <p class="text-md font-semibold mt-1">₹2,800</p>
-                </div>
-              </div>
-            </a>
-            <a
-              href="/assets/main_page_image_7.jpg"
-              class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
-              data-gallery="collection-gallery"
-              data-title="Men Sandel - ₹2,499"
-              style="transition-delay: 400ms"
-            >
-              <img
-                src="/assets/main_page_image_7.jpg"
-                class="w-full h-full object-cover"
-              />
-              <div
-                class="overlay absolute inset-0 flex items-end p-4 text-white"
-              >
-                <div class="overlay-content">
-                  <p class="text-sm font-light text-gray-300">Sandels</p>
-                  <p class="font-bold text-lg">Men Sandel</p>
-                  <p class="text-md font-semibold mt-1">₹2,499</p>
-                </div>
-              </div>
-            </a>
-            <a
-              href="/assets/main_page_image_5.jpg"
-              class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
-              data-gallery="collection-gallery"
-              data-title="Casual - ₹900"
-              style="transition-delay: 500ms"
-            >
-              <img
-                src="/assets/main_page_image_5.jpg"
-                alt="Tassel Loafer"
-                class="w-full h-full object-cover"
-              />
-              <div
-                class="overlay absolute inset-0 flex items-end p-4 text-white"
-              >
-                <div class="overlay-content">
-                  <p class="text-sm font-light text-gray-300">Slippers</p>
-                  <p class="font-bold text-lg">Casual</p>
-                  <p class="text-md font-semibold mt-1">₹900</p>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="contact"
-        class="py-16 md:py-24"
-        style="background-color: white"
-      >
-        <div class="container mx-auto px-4">
-          <div class="grid md:grid-cols-2 gap-12 animate-on-scroll">
-            <div>
-              <h2 class="text-4xl font-bold mb-6">Visit Us</h2>
-              <p class="text-lg mb-2" style="color: var(--text-secondary)">
-                <strong class="font-semibold">Address:</strong>
-                <a
-                  href="https://www.google.com/maps/search/?api=1&query=32X5%2BR85%2C+Nuh%2C+Haryana+122107"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="hover:text-[var(--accent-red)] transition-colors"
-                  >32X5+R85, Nuh, Haryana 122107</a
-                >
-              </p>
-              <p class="text-lg mb-2" style="color: var(--text-secondary)">
-                <strong class="font-semibold">Phone:</strong>
-                <a
-                  href="tel:+919050211616"
-                  class="hover:text-[var(--accent-red)] transition-colors"
-                  >+91 90502 11616</a
-                >
-              </p>
-              <p class="text-lg mb-6" style="color: var(--text-secondary)">
-                <strong class="font-semibold">Email:</strong>
-                contact@rifakatshoegarden.com
-              </p>
-              <div
-                class="h-96 bg-gray-300 rounded-lg overflow-hidden shadow-md"
-              >
-                <iframe
-                  src="https://maps.google.com/maps?q=32X5%2BR85%2C%20Nuh%2C%20Haryana%20122107&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                  width="100%"
-                  height="100%"
-                  style="border: 0"
-                  allowfullscreen=""
-                  loading="lazy"
-                  referrerpolicy="no-referrer-when-downgrade"
-                ></iframe>
-              </div>
-            </div>
-            <div>
-              <h2 class="text-4xl font-bold mb-6">Get In Touch</h2>
-              <form id="contact-form">
-                <div class="mb-4">
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Your Name"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-red)]"
-                    required
-                  />
-                </div>
-                <div class="mb-4">
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Your Phone Number"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-red)]"
-                    required
-                  />
-                </div>
-                <div class="mb-4">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Your Email"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-red)]"
-                    required
-                  />
-                </div>
-                <div class="mb-4">
-                  <input
-                    type="text"
-                    name="address"
-                    placeholder="Your Address"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-red)]"
-                    required
-                  />
-                </div>
-                <div class="mb-4">
-                  <textarea
-                    name="message"
-                    placeholder="Your Message (Optional)"
-                    rows="4"
-                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-red)]"
-                  ></textarea>
-                </div>
-                <button
-                  id="submit-button"
-                  type="button"
-                  class="cta-button w-full text-white font-bold py-3 px-8 rounded-full text-lg uppercase tracking-wider shadow-lg"
-                >
-                  Send on WhatsApp
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="bg-black text-white py-12">
+    <section id="shop-carousel" class="py-16 md:py-24 bg-white">
       <div class="container mx-auto px-4 text-center">
-        <div class="flex justify-center space-x-6 mb-6">
-          <a
-            href="#home"
-            class="hover:text-[var(--accent-red)] transition-colors"
-            >Home</a
-          >
-          <a
-            href="#about"
-            class="hover:text-[var(--accent-red)] transition-colors"
-            >About</a
-          >
-          <a
-            href="#categories"
-            class="hover:text-[var(--accent-red)] transition-colors"
-            >Collection</a
-          >
-          <a
-            href="#contact"
-            class="hover:text-[var(--accent-red)] transition-colors"
-            >Contact</a
-          >
-        </div>
-        <p class="text-gray-400">
-          © 2025 Rifakat Shoe Garden. All Rights Reserved.
-        </p>
-
-        <div class="mt-4">
-          <a
-            href="frontend-admin/login.html"
-            class="text-sm text-gray-500 hover:text-[var(--accent-red)] transition-colors"
-            >Admin Panel</a
-          >
+        <h2 class="text-4xl font-bold mb-12 animate-on-scroll">Our Store</h2>
+        <div class="swiper store-swiper rounded-lg shadow-xl overflow-hidden animate-on-scroll max-w-5xl mx-auto">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <img src="/assets/IMG_20250923_134613_172.jpg" alt="Interior view of the shoe store"
+                class="w-full h-full object-cover" />
+            </div>
+            <div class="swiper-slide">
+              <img src="/assets/IMG_3232.JPG" alt="Interior view of the shoe store"
+                class="w-full h-full object-cover" />
+            </div>
+            <div class="swiper-slide">
+              <img src="/assets/IMG_3990[1].JPG" alt="Interior view of the shoe store"
+                class="w-full h-full object-cover" />
+            </div>
+            <div class="swiper-slide">
+              <img src="/assets/WhatsApp Image 2025-10-22 at 21.54.12_f3c0da4e.jpg" alt="Wall of sneakers"
+                class="w-full h-full object-cover" />
+            </div>
+            <div class="swiper-slide">
+              <img src="/assets/WhatsApp Image 2025-10-22 at 21.54.18_b5297edf.jpg" alt="Shoe display close-up"
+                class="w-full h-full object-cover" />
+            </div>
+            <div class="swiper-slide">
+              <img src="/assets/IMG_20250923_134613_309.jpg" alt="Formal shoes section"
+                class="w-full h-full object-cover" />
+            </div>
+          </div>
+          <div class="swiper-pagination"></div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
         </div>
       </div>
-    </footer>
+    </section>
+    <section id="about" class="py-16 md:py-20 bg-neutral-light">
+      <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center animate-on-scroll">
 
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+          <div class="about-image-wrapper">
+            <div class="about-image-container">
+              <img src="assets/Owner_IMG.png" alt="Mr. Salim Khan - Owner of Rifakat Shoe Garden" loading="lazy" />
+            </div>
+          </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const header = document.getElementById("header");
-        window.addEventListener("scroll", () => {
-          window.scrollY > 50
-            ? header.classList.add("header-scrolled")
-            : header.classList.remove("header-scrolled");
-        });
+          <div class="about-content">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 md:mb-6">Meet Mr. Salim Khan</h2>
+            <p class="text-base md:text-lg mb-3 md:mb-4 leading-relaxed" style="color: var(--text-secondary)">
+              With over <strong>3 years of experience</strong> in the footwear industry, Mr. Salim Khan founded
+              <strong>Rifakat Shoe Garden</strong> in Nuh, Haryana, with a vision to bring quality, style, and
+              comfort to every customer.
+            </p>
+            <p class="text-base md:text-lg mb-3 md:mb-4 leading-relaxed" style="color: var(--text-secondary)">
+              "At Rifakat Shoe Garden, we believe that the right pair of shoes can transform not just your outfit,
+              but your entire day. Every shoe we offer is carefully selected to ensure it meets our standards of
+              quality, durability, and style."
+            </p>
+            <p class="text-base md:text-lg leading-relaxed" style="color: var(--text-secondary)">
+              From top brands like <strong>Nike and Adidas</strong> to elegant <strong>formal shoes and
+                sandals</strong>,
+              we curate collections that blend timeless style with modern trends. We also specialize in high-quality
+              <strong>brand first copies</strong> at the <strong>cheapest prices</strong>, ensuring you get the look you
+              want for less.
+              Visit us today and experience personalized service that puts your comfort first.
+            </p>
 
-        const mobileMenuButton = document.getElementById("mobile-menu-button");
-        const closeMenuButton = document.getElementById("close-menu-button");
-        const mobileMenu = document.getElementById("mobile-menu");
-        const menuLinks = document.querySelectorAll(".menu-link");
-        const mobileCollectionToggle = document.getElementById(
-          "mobile-collection-toggle"
-        );
-        const mobileCollectionLinks = document.getElementById(
-          "mobile-collection-links"
-        );
+            <div class="mt-6 md:mt-8">
+              <a href="#contact"
+                class="inline-block bg-[var(--accent-red)] text-white px-6 py-3 rounded-full font-semibold hover:bg-[var(--accent-red-darker)] transition-all duration-300 transform hover:-translate-y-1">
+                Visit Our Store
+              </a>
+            </div>
+          </div>
 
-        const openMenu = () => mobileMenu.classList.add("open");
-        const closeMenu = () => {
-          mobileMenu.classList.remove("open");
-          mobileCollectionLinks.classList.add("hidden");
-        };
+        </div>
+      </div>
+    </section>
 
-        mobileMenuButton.addEventListener("click", openMenu);
-        closeMenuButton.addEventListener("click", closeMenu);
-        menuLinks.forEach((link) => {
-          if (!link.parentElement.id.includes("collection")) {
-            link.addEventListener("click", closeMenu);
-          }
-        });
-        mobileCollectionToggle.addEventListener("click", () => {
-          mobileCollectionLinks.classList.toggle("hidden");
-        });
+    <section id="categories" class="py-16 md:py-24 bg-white">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold mb-12 animate-on-scroll">
+          Featured Categories
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+          <a href="sneakers.html"
+            class="block bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300 animate-on-scroll">
+            <div class="text-5xl mb-4">👟</div>
+            <h3 class="text-2xl font-semibold mb-2">Sneakers</h3>
+          </a>
+          <a href="boots.html"
+            class="block bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300 animate-on-scroll"
+            style="transition-delay: 100ms">
+            <div class="text-5xl mb-4">🥾</div>
+            <h3 class="text-2xl font-semibold mb-2">Boots</h3>
+          </a>
+          <a href="sandals.html"
+            class="block bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300 animate-on-scroll"
+            style="transition-delay: 200ms">
+            <div class="text-5xl mb-4">👡</div>
+            <h3 class="text-2xl font-semibold mb-2">Sandals</h3>
+          </a>
+          <a href="slippers.html"
+            class="block bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300 animate-on-scroll"
+            style="transition-delay: 300ms">
+            <div class="text-5xl mb-4">🩴</div>
+            <h3 class="text-2xl font-semibold mb-2">Slippers</h3>
+          </a>
+          <a href="formal.html"
+            class="block bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300 animate-on-scroll"
+            style="transition-delay: 400ms">
+            <div class="text-5xl mb-4">👞</div>
+            <h3 class="text-2xl font-semibold mb-2">Formal Shoes</h3>
+          </a>
+        </div>
+      </div>
+    </section>
 
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("visible");
-              }
-            });
-          },
-          { threshold: 0.1 }
-        );
-        document
-          .querySelectorAll(".animate-on-scroll")
-          .forEach((el) => observer.observe(el));
+    <section id="gallery" class="py-16 md:py-24 bg-neutral-light">
+      <div class="container mx-auto px-4 text-center">
+        <h2 class="text-4xl font-bold mb-12 animate-on-scroll">
+          From Our Collection
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <a href="/assets/main_page_image_1.jpg"
+            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
+            data-gallery="collection-gallery" data-title="Nike Air Max Fly - ₹799">
+            <img src="/assets/main_page_image_1.jpg" alt="Nike Air Max Fly" class="w-full h-full object-cover" />
+            <div class="overlay absolute inset-0 flex items-end p-4 text-white">
+              <div class="overlay-content">
+                <p class="text-sm font-light text-gray-300">Sneaker</p>
+                <p class="font-bold text-lg">Nike Air Max Fly</p>
+                <p class="text-md font-semibold mt-1">₹799</p>
+              </div>
+            </div>
+          </a>
+          <a href="/assets/main_page_image_2.jpg"
+            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
+            data-gallery="collection-gallery" data-title="Brown leather boots - ₹1,799" style="transition-delay: 100ms">
+            <img src="/assets/main_page_image_2.jpg" alt="Classic Oxford" class="w-full h-full object-cover" />
+            <div class="overlay absolute inset-0 flex items-end p-4 text-white">
+              <div class="overlay-content">
+                <p class="text-sm font-light text-gray-300">Boots</p>
+                <p class="font-bold text-lg">Brown leather boots</p>
+                <p class="text-md font-semibold mt-1">₹1,799</p>
+              </div>
+            </div>
+          </a>
+          <a href="/assets/main_page_image_3.jpg"
+            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
+            data-gallery="collection-gallery" data-title="Brown Sneaker - ₹1,499" style="transition-delay: 200ms">
+            <img src="/assets/main_page_image_3.jpg" alt="Leather Sandal" class="w-full h-full object-cover" />
+            <div class="overlay absolute inset-0 flex items-end p-4 text-white">
+              <div class="overlay-content">
+                <p class="text-sm font-light text-gray-300">Formal Shoes</p>
+                <p class="font-bold text-lg">Brown Sneaker</p>
+                <p class="text-md font-semibold mt-1">₹1,499</p>
+              </div>
+            </div>
+          </a>
+          <a href="/assets/main_page_image_4.jpg"
+            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
+            data-gallery="collection-gallery" data-title="Nike Sneaker - ₹2,800" style="transition-delay: 300ms">
+            <img src="/assets/main_page_image_4.jpg" alt="Suede Boot" class="w-full h-full object-cover" />
+            <div class="overlay absolute inset-0 flex items-end p-4 text-white">
+              <div class="overlay-content">
+                <p class="text-sm font-light text-gray-300">Sneaker</p>
+                <p class="font-bold text-lg">Nike Sneaker</p>
+                <p class="text-md font-semibold mt-1">₹2,800</p>
+              </div>
+            </div>
+          </a>
+          <a href="/assets/main_page_image_7.jpg"
+            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
+            data-gallery="collection-gallery" data-title="Men Sandel - ₹2,499" style="transition-delay: 400ms">
+            <img src="/assets/main_page_image_7.jpg" class="w-full h-full object-cover" />
+            <div class="overlay absolute inset-0 flex items-end p-4 text-white">
+              <div class="overlay-content">
+                <p class="text-sm font-light text-gray-300">Sandels</p>
+                <p class="font-bold text-lg">Men Sandel</p>
+                <p class="text-md font-semibold mt-1">₹2,499</p>
+              </div>
+            </div>
+          </a>
+          <a href="/assets/main_page_image_5.jpg"
+            class="gallery-item block rounded-lg overflow-hidden shadow-lg relative group animate-on-scroll glightbox"
+            data-gallery="collection-gallery" data-title="Casual - ₹900" style="transition-delay: 500ms">
+            <img src="/assets/main_page_image_5.jpg" alt="Tassel Loafer" class="w-full h-full object-cover" />
+            <div class="overlay absolute inset-0 flex items-end p-4 text-white">
+              <div class="overlay-content">
+                <p class="text-sm font-light text-gray-300">Slippers</p>
+                <p class="font-bold text-lg">Casual</p>
+                <p class="text-md font-semibold mt-1">₹900</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
 
-        // Initialize Swiper
-        const swiper = new Swiper(".store-swiper", {
-          loop: true,
-          autoplay: {
-            delay: 3000,
-            disableOnInteraction: false,
-          },
-          pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-          },
-          navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-          },
-        });
+    <section id="contact" class="py-16 md:py-24" style="background-color: white">
+      <div class="container mx-auto px-4">
+        <div class="grid md:grid-cols-2 gap-12 animate-on-scroll">
+          <div>
+            <h2 class="text-4xl font-bold mb-6">Visit Us</h2>
+            <p class="text-lg mb-2" style="color: var(--text-secondary)">
+              <strong class="font-semibold">Address:</strong>
+              <a href="https://www.google.com/maps/search/?api=1&query=32X5%2BR85%2C+Nuh%2C+Haryana+122107"
+                target="_blank" rel="noopener noreferrer"
+                class="hover:text-[var(--accent-red)] transition-colors">32X5+R85, Nuh, Haryana 122107</a>
+            </p>
+            <p class="text-lg mb-2" style="color: var(--text-secondary)">
+              <strong class="font-semibold">Phone:</strong>
+              <a href="tel:+919050211616" class="hover:text-[var(--accent-red)] transition-colors">+91 90502 11616</a>
+            </p>
+            <p class="text-lg mb-6" style="color: var(--text-secondary)">
+              <strong class="font-semibold">Email:</strong>
+              contact@rifakatshoegarden.com
+            </p>
+            <div class="h-96 bg-gray-300 rounded-lg overflow-hidden shadow-md">
+              <iframe
+                src="https://maps.google.com/maps?q=32X5%2BR85%2C%20Nuh%2C%20Haryana%20122107&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                width="100%" height="100%" style="border: 0" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+          </div>
+          <div>
+            <h2 class="text-4xl font-bold mb-6">Get In Touch</h2>
+            <form id="contact-form">
+              <div class="mb-4">
+                <input type="text" name="name" placeholder="Your Name"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-red)]"
+                  required />
+              </div>
+              <div class="mb-4">
+                <input type="tel" name="phone" placeholder="Your Phone Number"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-red)]"
+                  required />
+              </div>
+              <div class="mb-4">
+                <input type="email" name="email" placeholder="Your Email"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-red)]"
+                  required />
+              </div>
+              <div class="mb-4">
+                <input type="text" name="address" placeholder="Your Address"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-red)]"
+                  required />
+              </div>
+              <div class="mb-4">
+                <textarea name="message" placeholder="Your Message (Optional)" rows="4"
+                  class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-red)]"></textarea>
+              </div>
+              <button id="submit-button" type="button"
+                class="cta-button w-full text-white font-bold py-3 px-8 rounded-full text-lg uppercase tracking-wider shadow-lg">
+                Send on WhatsApp
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-        const contactForm = document.getElementById("contact-form");
-        const submitButton = document.getElementById("submit-button");
-        submitButton.addEventListener("click", function () {
-          if (!contactForm.checkValidity()) {
-            contactForm.reportValidity();
-            return;
-          }
+  <footer class="bg-black text-white py-12">
+    <div class="container mx-auto px-4 text-center">
+      <div class="flex justify-center space-x-6 mb-6">
+        <a href="#home" class="hover:text-[var(--accent-red)] transition-colors">Home</a>
+        <a href="#about" class="hover:text-[var(--accent-red)] transition-colors">About</a>
+        <a href="#categories" class="hover:text-[var(--accent-red)] transition-colors">Collection</a>
+        <a href="#contact" class="hover:text-[var(--accent-red)] transition-colors">Contact</a>
+      </div>
+      <p class="text-gray-400">
+        © 2025 Rifakat Shoe Garden. All Rights Reserved.
+      </p>
 
-          const name = contactForm.querySelector('input[name="name"]').value;
-          const phone = contactForm.querySelector('input[name="phone"]').value;
-          const email = contactForm.querySelector('input[name="email"]').value;
-          const address = contactForm.querySelector(
-            'input[name="address"]'
-          ).value;
-          const message = contactForm.querySelector(
-            'textarea[name="message"]'
-          ).value;
+      <div class="mt-4">
+        <a href="frontend-admin/login.html"
+          class="text-sm text-gray-500 hover:text-[var(--accent-red)] transition-colors">Admin Panel</a>
+      </div>
+    </div>
+  </footer>
 
-          const whatsappMessage = `New Inquiry from Website Form :\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Email:* ${email}\n*Address:* ${address}\n\n*Message:*\n${
-            message || "No message."
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const header = document.getElementById("header");
+      window.addEventListener("scroll", () => {
+        window.scrollY > 50
+          ? header.classList.add("header-scrolled")
+          : header.classList.remove("header-scrolled");
+      });
+
+      const mobileMenuButton = document.getElementById("mobile-menu-button");
+      const closeMenuButton = document.getElementById("close-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const menuLinks = document.querySelectorAll(".menu-link");
+      const mobileCollectionToggle = document.getElementById(
+        "mobile-collection-toggle"
+      );
+      const mobileCollectionLinks = document.getElementById(
+        "mobile-collection-links"
+      );
+
+      const openMenu = () => mobileMenu.classList.add("open");
+      const closeMenu = () => {
+        mobileMenu.classList.remove("open");
+        mobileCollectionLinks.classList.add("hidden");
+      };
+
+      mobileMenuButton.addEventListener("click", openMenu);
+      closeMenuButton.addEventListener("click", closeMenu);
+      menuLinks.forEach((link) => {
+        if (!link.parentElement.id.includes("collection")) {
+          link.addEventListener("click", closeMenu);
+        }
+      });
+      mobileCollectionToggle.addEventListener("click", () => {
+        mobileCollectionLinks.classList.toggle("hidden");
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      document
+        .querySelectorAll(".animate-on-scroll")
+        .forEach((el) => observer.observe(el));
+
+      // Initialize Swiper
+      const swiper = new Swiper(".store-swiper", {
+        loop: true,
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false,
+        },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+      });
+
+      const contactForm = document.getElementById("contact-form");
+      const submitButton = document.getElementById("submit-button");
+      submitButton.addEventListener("click", function () {
+        if (!contactForm.checkValidity()) {
+          contactForm.reportValidity();
+          return;
+        }
+
+        const name = contactForm.querySelector('input[name="name"]').value;
+        const phone = contactForm.querySelector('input[name="phone"]').value;
+        const email = contactForm.querySelector('input[name="email"]').value;
+        const address = contactForm.querySelector(
+          'input[name="address"]'
+        ).value;
+        const message = contactForm.querySelector(
+          'textarea[name="message"]'
+        ).value;
+
+        const whatsappMessage = `New Inquiry from Website Form :\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Email:* ${email}\n*Address:* ${address}\n\n*Message:*\n${message || "No message."
           }`;
 
-          const whatsappURL = `https://wa.me/919050211616?text=${encodeURIComponent(
-            whatsappMessage
-          )}`;
-          submitButton.textContent = "Redirecting...";
-          window.location.href = whatsappURL;
-        });
+        const whatsappURL = `https://wa.me/919050211616?text=${encodeURIComponent(
+          whatsappMessage
+        )}`;
+        submitButton.textContent = "Redirecting...";
+        window.location.href = whatsappURL;
       });
-    </script>
-    <script src="js/config.js"></script>
+    });
+  </script>
+  <script src="js/config.js"></script>
 
-    <script src="js/app.js"></script>
+  <script src="js/app.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
-    <script>
-      // Initialize GLightbox
-      document.addEventListener("DOMContentLoaded", () => {
-        const lightbox = GLightbox({
-          selector: ".glightbox",
-        });
+  <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+  <script>
+    // Initialize GLightbox
+    document.addEventListener("DOMContentLoaded", () => {
+      const lightbox = GLightbox({
+        selector: ".glightbox",
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>
