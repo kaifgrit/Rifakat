@@ -137,15 +137,8 @@
         left: 0;
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain;
       }
-
-      @media (min-width: 768px) {
-        .about-grid {
-          grid-template-columns: 0.8fr 1.2fr;
-        }
-      }
-
       .dropdown {
         position: relative;
       }
@@ -185,8 +178,17 @@
       }
 
       .store-swiper {
-        height: 60vh;
-        max-height: 500px;
+        /* Mobile-first (default): Use a 4:3 aspect ratio */
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4 / 3;
+      }
+
+      @media (min-width: 768px) {
+        /* Desktop (md) and up: Switch to a 16:9 aspect ratio */
+        .store-swiper {
+          aspect-ratio: 16 / 9;
+        }
       }
 
       .swiper-button-next,
@@ -557,40 +559,47 @@
         <div class="container mx-auto px-4 text-center">
           <h2 class="text-4xl font-bold mb-12 animate-on-scroll">Our Store</h2>
           <div
-            class="swiper store-swiper rounded-lg shadow-xl overflow-hidden animate-on-scroll"
+            class="swiper store-swiper rounded-lg shadow-xl overflow-hidden animate-on-scroll max-w-5xl mx-auto"
           >
             <div class="swiper-wrapper">
               <div class="swiper-slide">
                 <img
-                  src="/assets/Front_image_1.jpg"
+                  src="/assets/IMG_20250923_134613_172.jpg"
                   alt="Interior view of the shoe store"
                   class="w-full h-full object-cover"
                 />
               </div>
               <div class="swiper-slide">
                 <img
-                  src="/assets/Front_image_6.jpg"
+                  src="/assets/IMG_3232.JPG"
                   alt="Interior view of the shoe store"
                   class="w-full h-full object-cover"
                 />
               </div>
               <div class="swiper-slide">
                 <img
-                  src="/assets/Front_image_3.jpg"
+                  src="/assets/IMG_3990[1].JPG"
+                  alt="Interior view of the shoe store"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div class="swiper-slide">
+                <img
+                  src="/assets/WhatsApp Image 2025-10-22 at 21.54.12_f3c0da4e.jpg"
                   alt="Wall of sneakers"
                   class="w-full h-full object-cover"
                 />
               </div>
               <div class="swiper-slide">
                 <img
-                  src="/assets/Front_image_4.jpg"
+                  src="/assets/WhatsApp Image 2025-10-22 at 21.54.18_b5297edf.jpg"
                   alt="Shoe display close-up"
                   class="w-full h-full object-cover"
                 />
               </div>
               <div class="swiper-slide">
                 <img
-                  src="/assets/Front_image_5.jpg"
+                  src="/assets/IMG_20250923_134613_309.jpg"
                   alt="Formal shoes section"
                   class="w-full h-full object-cover"
                 />
@@ -603,68 +612,46 @@
         </div>
       </section>
       <section id="about" class="py-16 md:py-20 bg-neutral-light">
-        <div class="container mx-auto px-4">
-          <div
-            class="grid md:grid-cols-2 gap-8 md:gap-12 items-center animate-on-scroll"
-          >
-            <!-- Image Container - LEFT SIDE -->
-            <div class="about-image-wrapper">
-              <div class="about-image-container">
-                <img
-                  src="assets/Owner_IMG.png"
-                  alt="Mr. Salim Khan - Owner of Rifakat Shoe Garden"
-                  loading="lazy"
-                />
-              </div>
-            </div>
-
-            <!-- Content Container - RIGHT SIDE -->
-            <div class="about-content">
-              <h2 class="text-3xl md:text-4xl font-bold mb-4 md:mb-6">
-                Meet Mr. Salim Khan
-              </h2>
-              <p
-                class="text-base md:text-lg mb-3 md:mb-4 leading-relaxed"
-                style="color: var(--text-secondary)"
-              >
-                With over <strong> 3 years of experience</strong> in the
-                footwear industry, Mr. Salim Khan founded
-                <strong>Rifakat Shoe Garden</strong> in Nuh, Haryana, with a
-                vision to bring quality, style, and comfort to every customer.
-              </p>
-              <p
-                class="text-base md:text-lg mb-3 md:mb-4 leading-relaxed"
-                style="color: var(--text-secondary)"
-              >
-                "At Rifakat Shoe Garden, we believe that the right pair of shoes
-                can transform not just your outfit, but your entire day. Every
-                shoe we offer is carefully selected to ensure it meets our
-                standards of quality, durability, and style."
-              </p>
-              <p
-                class="text-base md:text-lg leading-relaxed"
-                style="color: var(--text-secondary)"
-              >
-                From <strong>Nike and Adidas</strong> to
-                <strong>formal shoes and sandals</strong>, we curate collections
-                that blend timeless elegance with modern trends. Visit us today
-                and experience personalized service that puts your comfort
-                first.
-              </p>
-
-              <!-- Optional: Call to Action -->
-              <div class="mt-6 md:mt-8">
-                <a
-                  href="#contact"
-                  class="inline-block bg-[var(--accent-red)] text-white px-6 py-3 rounded-full font-semibold hover:bg-[var(--accent-red-darker)] transition-all duration-300 transform hover:-translate-y-1"
-                >
-                  Visit Our Store
-                </a>
-              </div>
-            </div>
-          </div>
+  <div class="container mx-auto px-4">
+    <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center animate-on-scroll">
+      
+      <!-- Image Container - LEFT SIDE -->
+      <div class="about-image-wrapper">
+        <div class="about-image-container">
+          <img src="assets/Owner_IMG.png" alt="Mr. Salim Khan - Owner of Rifakat Shoe Garden" loading="lazy" />
         </div>
-      </section>
+      </div>
+
+      <!-- Content Container - RIGHT SIDE -->
+      <div class="about-content">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 md:mb-6">Meet Mr. Salim Khan</h2>
+        <p class="text-base md:text-lg mb-3 md:mb-4 leading-relaxed" style="color: var(--text-secondary)">
+          With over <strong>15 years of experience</strong> in the footwear industry, Mr. Salim Khan founded 
+          <strong>Rifakat Shoe Garden</strong> in Nuh, Haryana, with a vision to bring quality, style, and 
+          comfort to every customer.
+        </p>
+        <p class="text-base md:text-lg mb-3 md:mb-4 leading-relaxed" style="color: var(--text-secondary)">
+          "At Rifakat Shoe Garden, we believe that the right pair of shoes can transform not just your outfit, 
+          but your entire day. Every shoe we offer is carefully selected to ensure it meets our standards of 
+          quality, durability, and style."
+        </p>
+        <p class="text-base md:text-lg leading-relaxed" style="color: var(--text-secondary)">
+          From <strong>Nike and Adidas</strong> to <strong>formal shoes and sandals</strong>, we curate collections 
+          that blend timeless elegance with modern trends. Visit us today and experience personalized service that 
+          puts your comfort first.
+        </p>
+        
+        <!-- Optional: Call to Action -->
+        <div class="mt-6 md:mt-8">
+          <a href="#contact" class="inline-block bg-[var(--accent-red)] text-white px-6 py-3 rounded-full font-semibold hover:bg-[var(--accent-red-darker)] transition-all duration-300 transform hover:-translate-y-1">
+            Visit Our Store
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
 
       <section id="categories" class="py-16 md:py-24 bg-white">
         <div class="container mx-auto px-4 text-center">
