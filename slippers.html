@@ -130,77 +130,77 @@
         border-color: var(--accent-red);
         box-shadow: 0 0 0 2px white, 0 0 0 4px var(--accent-red);
       }
+      
+      /* --- ADDED CSS FOR SIZE BUTTONS --- */
+      .size-buttons-container {
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .size-buttons-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+      }
+
+      .size-button {
+        min-width: 45px;
+        padding: 8px 12px;
+        background-color: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #1f2937;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+      }
+
+      .size-button:hover {
+        border-color: var(--accent-red);
+        background-color: rgba(234, 85, 59, 0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .size-button.active {
+        background-color: var(--accent-red);
+        border-color: var(--accent-red);
+        color: white;
+        box-shadow: 0 4px 12px rgba(234, 85, 59, 0.3);
+        transform: scale(1.05);
+      }
+
+      .size-button:active {
+        transform: scale(0.98);
+      }
+
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+      }
+
+      .shake-animation {
+        animation: shake 0.6s ease-in-out;
+        border: 2px solid var(--accent-red) !important;
+      }
+
+      @media (max-width: 640px) {
+        .size-button {
+          min-width: 40px;
+          padding: 6px 10px;
+          font-size: 0.85rem;
+        }
+        .size-buttons-grid {
+          gap: 6px;
+        }
+      }
+      /* --- END OF ADDED CSS --- */
     </style>
-    .size-buttons-container {
-  padding: 10px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-}
-
-.size-buttons-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-}
-
-.size-button {
-  min-width: 45px;
-  padding: 8px 12px;
-  background-color: white;
-  border: 2px solid #e5e7eb;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #1f2937;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
-}
-
-.size-button:hover {
-  border-color: var(--accent-red);
-  background-color: rgba(234, 85, 59, 0.05);
-  transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.size-button.active {
-  background-color: var(--accent-red);
-  border-color: var(--accent-red);
-  color: white;
-  box-shadow: 0 4px 12px rgba(234, 85, 59, 0.3);
-  transform: scale(1.05);
-}
-
-.size-button:active {
-  transform: scale(0.98);
-}
-
-/* Shake animation for validation */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
-}
-
-.shake-animation {
-  animation: shake 0.6s ease-in-out;
-  border: 2px solid var(--accent-red) !important;
-}
-
-/* Mobile responsive */
-@media (max-width: 640px) {
-  .size-button {
-    min-width: 40px;
-    padding: 6px 10px;
-    font-size: 0.85rem;
-  }
-  
-  .size-buttons-grid {
-    gap: 6px;
-  }
-}
   </head>
 
   <body>
@@ -250,10 +250,7 @@
         </p>
       </div>
     </footer>
-    <!-- Add these two lines before closing </body> tag -->
     
-
-
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
