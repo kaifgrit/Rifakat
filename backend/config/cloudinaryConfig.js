@@ -20,7 +20,17 @@ const storage = new CloudinaryStorage({
   params: {
     folder: 'rifakat-shoe-garden', // Folder name in Cloudinary
     allowed_formats: ['jpg', 'jpeg', 'png'], // Allowed image formats
-    transformation: [{ width: 800, height: 800, crop: 'limit' }], // Resize images
+    
+    // --- THIS IS THE UPDATED LINE ---
+    // 'pad' will fit the image within 800x800 and add a white background
+    // to make the final image perfectly square.
+    transformation: [{ 
+      width: 800, 
+      height: 800, 
+      crop: 'pad', 
+      background: 'white' 
+    }],
+    // --- END OF UPDATE ---
   },
 });
 
