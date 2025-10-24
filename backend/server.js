@@ -16,6 +16,8 @@ const allowedOrigins = [
   "http://127.0.0.1:3000",
   "http://localhost:5500", // Added for common static servers
   "http://127.0.0.1:5500", // Added for common static servers
+  "https://www.rifakatshoegarden.com", // <-- ADD THIS LINE
+  "https://rifakatshoegarden.com"      // <-- AND THIS LINE
 ];
 
 app.use(cors({
