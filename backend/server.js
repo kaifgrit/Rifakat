@@ -10,20 +10,18 @@ dotenv.config();
 const app = express();
 const PORT = 5000;
 
-// --- FIXED CORS CONFIGURATION ---
+// --- CORS CONFIGURATION ---
 const allowedOrigins = [
   "http://localhost:3000",
   "http://127.0.0.1:3000",
-  "http://localhost:5500", // Added for common static servers
-  "http://127.0.0.1:5500", // Added for common static servers
-  "https://rifakatshoegarden.vercel.app" // <-- ADDED YOUR VERCEL URL
+  "http://localhost:5500", 
+  "http://127.0.0.1:5500",
+  // We will add your live Render URL here later
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or 'file://' origins)
     if (!origin) return callback(null, true);
-    
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg = "The CORS policy for this site does not allow access from the specified Origin.";
       return callback(new Error(msg), false);
@@ -32,7 +30,7 @@ app.use(cors({
   },
   credentials: true
 }));
-// --- END FIX ---
+// --- END CORS ---
 
 app.use(express.json());
 
