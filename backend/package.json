@@ -30,13 +30,3 @@
     "nodemon": "^3.1.10"
   }
 }
-
-{
-  "name": "rifakat-shoe-garden",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "install-backend": "cd backend && npm install",
-    "start": "cd backend && npm start"
-  }
-}
