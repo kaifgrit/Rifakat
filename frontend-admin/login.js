@@ -9,6 +9,20 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  // --- START: NEWLY ADDED CODE FOR PASSWORD TOGGLE ---
+  const passwordInput = document.getElementById("password");
+  const showPasswordToggle = document.getElementById("show-password-toggle");
+
+  if (showPasswordToggle && passwordInput) {
+    showPasswordToggle.addEventListener("change", () => {
+      // If the checkbox is checked, show the password (set type to "text")
+      // Otherwise, hide it (set type to "password")
+      passwordInput.type = showPasswordToggle.checked ? "text" : "password";
+    });
+  }
+  // --- END: NEWLY ADDED CODE ---
+
+
   const loginForm = document.getElementById("login-form");
   const API_URL = `${config.API_URL}/auth/login`;
  

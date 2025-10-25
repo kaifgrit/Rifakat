@@ -562,3 +562,30 @@ hr {
 .btn-remove-image:hover {
   background-color: #c82333; /* darker danger */
 }
+
+
+/* --- START: NEWLY ADDED CODE --- */
+.show-password-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  gap: 8px; /* Adds space between the checkbox and the label */
+}
+
+.show-password-container label {
+  /* Override the default block label style from .form-group */
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.show-password-container input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--primary-color); /* Colors the checkbox */
+}
+/* --- END: NEWLY ADDED CODE --- */
