@@ -1,4 +1,4 @@
-// js/app.js - FINAL VERSION WITH SIZE BUTTONS
+// js/app.js - ENHANCED VERSION WITH RICH CARD FORMAT
 
 document.addEventListener("DOMContentLoaded", () => {
   if (typeof config === 'undefined') {
@@ -111,16 +111,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     card.dataset.productId = product._id;
     card.dataset.productName = product.productName;
+    card.dataset.productBrand = product.brand || "Generic";
+    card.dataset.productCategory = product.category;
     card.dataset.productPrice = product.price;
     card.dataset.productColors = JSON.stringify(product.colors);
 
     const urls = product.colors[0].imageUrls || (product.colors[0].imageUrl ? [product.colors[0].imageUrl] : []);
     const firstImageUrl = urls[0] || '';
 
-    // Get sizes for first color
     const initialSizes = product.colors[0].sizes || [];
     
-    // Build color swatches
     const colorSwatchesHTML = product.colors.map((color, index) => `
         <button class="color-swatch ${index === 0 ? "active" : ""}" 
                 style="background-color: ${color.colorHexCode || "#ffffff"};" 
@@ -129,7 +129,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </button>
     `).join("");
 
-    // Build size BUTTONS (instead of dropdown)
     let sizeButtonsHTML = '';
     if (initialSizes.length > 0) {
       const sizeButtons = initialSizes.map(size => 
@@ -172,18 +171,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const card = e.target.closest(".product-card");
     if (!card) return;
 
-    // Handle SIZE BUTTON click
     if (e.target.matches(".size-button")) {
       e.preventDefault();
       e.stopPropagation();
       
-      // Remove active class from all size buttons in this card
       card.querySelectorAll(".size-button").forEach(btn => btn.classList.remove("active"));
-      
-      // Add active class to clicked button
       e.target.classList.add("active");
     }
-    // Handle color swatch click
     else if (e.target.matches(".color-swatch")) {
       e.preventDefault();
       e.stopPropagation();
@@ -192,11 +186,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const productColors = JSON.parse(card.dataset.productColors);
       const selectedColor = productColors[colorIndex];
       
-      // Update active swatch
       card.querySelectorAll(".color-swatch").forEach(swatch => swatch.classList.remove("active"));
       e.target.classList.add("active");
 
-      // Update main image
       const mainImage = card.querySelector(".main-product-image");
       const urls = selectedColor.imageUrls || (selectedColor.imageUrl ? [selectedColor.imageUrl] : []);
       if (urls[0]) {
@@ -204,7 +196,6 @@ document.addEventListener("DOMContentLoaded", () => {
         mainImage.alt = `${card.dataset.productName} - ${selectedColor.colorName}`;
       }
 
-      // Update size BUTTONS with new color's sizes
       const sizeButtonsContainer = card.querySelector(".size-buttons-grid");
       if (sizeButtonsContainer && selectedColor.sizes && selectedColor.sizes.length > 0) {
         const sizeButtons = selectedColor.sizes.map(size => 
@@ -215,7 +206,6 @@ document.addEventListener("DOMContentLoaded", () => {
         sizeButtonsContainer.innerHTML = '<span class="text-gray-500 text-sm">No sizes available</span>';
       }
     } 
-    // Handle image click - open lightbox
     else if (e.target.closest(".product-image-container")) {
       e.preventDefault();
       e.stopPropagation();
@@ -239,29 +229,29 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       glightboxInstance.open();
     } 
-    // Handle buy button
     else if (e.target.matches(".buy-button")) {
       e.preventDefault();
       e.stopPropagation();
 
       const productName = card.dataset.productName;
+      const productBrand = card.dataset.productBrand;
+      const productCategory = card.dataset.productCategory;
       const productPrice = card.dataset.productPrice;
       const activeSwatchIndex = Array.from(card.querySelectorAll(".color-swatch")).findIndex(s => s.classList.contains("active"));
       const productColors = JSON.parse(card.dataset.productColors);
-      const colorName = productColors[activeSwatchIndex]?.colorName || "Default";
+      const selectedColor = productColors[activeSwatchIndex];
+      const colorName = selectedColor?.colorName || "Default";
+      const colorHex = selectedColor?.colorHexCode || "#ffffff";
 
-      // Get selected size from active button
       const activeSizeButton = card.querySelector(".size-button.active");
       let selectedSize = "";
       
       if (activeSizeButton) {
         selectedSize = activeSizeButton.dataset.size;
       } else {
-        // Check if sizes exist for this color
-        const hasSizes = productColors[activeSwatchIndex]?.sizes?.length > 0;
+        const hasSizes = selectedColor?.sizes?.length > 0;
         if (hasSizes) {
           alert("Please select a size before purchasing.");
-          // Add shake animation to size buttons
           const sizeContainer = card.querySelector(".size-buttons-container");
           if (sizeContainer) {
             sizeContainer.classList.add("shake-animation");
@@ -273,12 +263,31 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Build WhatsApp message
-      let message = `Hello, I'm interested in buying:\n\n*Product:* ${productName}\n*Color:* ${colorName}`;
+      // Get the current image URL
+      const mainImage = card.querySelector(".main-product-image");
+      const imageUrl = mainImage.src;
+
+      // Create rich formatted message
+      let message = `🛒 *NEW ORDER REQUEST*\n`;
+      message += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+      
+      // Product Details Section
+      message += `📦 *PRODUCT DETAILS*\n`;
+      message += `• Product: *${productName}*\n`;
+      message += `• Brand: ${productBrand}\n`;
+      message += `• Category: ${productCategory}\n`;
+      message += `• Color: ${colorName}\n`;
       if (selectedSize) {
-        message += `\n*Size:* ${selectedSize}`;
+        message += `• Size: *${selectedSize}*\n`;
       }
-      message += `\n*Price:* ₹${productPrice}`;
+      message += `• Price: *₹${productPrice}*\n\n`;
+      
+      // Image Section
+      message += `📸 *Product Image:*\n`;
+      message += `${imageUrl}\n\n`;
+      
+      message += `━━━━━━━━━━━━━━━━━━━━\n`;
+      message += `💬 Please confirm availability and proceed with the order.`;
 
       const whatsappURL = `https://wa.me/919050211616?text=${encodeURIComponent(message)}`;
       window.open(whatsappURL, "_blank");
