@@ -4,6 +4,35 @@ const express = require("express");
 const router = express.Router();
 const Product = require("../models/productModel");
 const { protect } = require("../middleware/auth");
+const cloudinary = require('cloudinary').v2; // <-- ADDED THIS
+
+/**
+ * Helper function to extract the Cloudinary public_id from a full URL.
+ * e.g., "http://res.cloudinary.com/dxouvnf7y/image/upload/v168000/rifakat-shoe-garden/abc.jpg"
+ * becomes "rifakat-shoe-garden/abc"
+ */
+const getPublicIdFromUrl = (url) => {
+  try {
+    const parts = url.split('/');
+    const uploadIndex = parts.indexOf('upload');
+    if (uploadIndex === -1) return null;
+
+    // Get from 'v123456' onwards
+    // e.g., v123/rifakat-shoe-garden/abc.jpg
+    const pathWithVersion = parts.slice(uploadIndex + 1).join('/');
+
+    // Remove version: 'rifakat-shoe-garden/abc.jpg'
+    const publicIdWithExt = pathWithVersion.substring(pathWithVersion.indexOf('/') + 1);
+
+    // Remove extension: 'rifakat-shoe-garden/abc'
+    const publicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));
+
+    return publicId;
+  } catch (e) {
+    console.error('Could not parse public_id from url:', url, e);
+    return null;
+  }
+}
 
 // @desc   Fetch all products or filter by category
 // @route  GET /api/products
@@ -39,10 +68,10 @@ router.get("/:id", async (req, res) => {
 router.post("/", protect, async (req, res) => {
   try {
     const { productName, brand, price, category, colors } = req.body;
-    
+
     // Validation
     if (!productName || !price || !category || !colors || colors.length === 0) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: "Missing required fields",
         required: ["productName", "price", "category", "colors (at least one)"]
       });
@@ -52,13 +81,13 @@ router.post("/", protect, async (req, res) => {
     for (let i = 0; i < colors.length; i++) {
       const color = colors[i];
       const hasImages = (color.imageUrls && color.imageUrls.length > 0) || color.imageUrl;
-      
+
       if (!hasImages) {
-        return res.status(400).json({ 
-          message: `Color "${color.colorName || `#${i+1}`}" must have at least one image`
+        return res.status(400).json({
+          message: `Color "${color.colorName || `#${i + 1}`}" must have at least one image`
         });
       }
-      
+
       // Convert single imageUrl to imageUrls array for consistency
       if (color.imageUrl && !color.imageUrls) {
         color.imageUrls = [color.imageUrl];
@@ -73,25 +102,25 @@ router.post("/", protect, async (req, res) => {
       category,
       colors,
     });
-    
+
     const createdProduct = await product.save();
     console.log("Product created successfully:", createdProduct._id);
     res.status(201).json(createdProduct);
-    
+
   } catch (error) {
     console.error("Error creating product:", error);
-    
+
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map(e => e.message);
-      return res.status(400).json({ 
-        message: "Validation failed", 
-        errors: errors 
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: errors
       });
     }
-    
-    res.status(500).json({ 
-      message: "Server Error while creating product", 
-      error: error.message 
+
+    res.status(500).json({
+      message: "Server Error while creating product",
+      error: error.message
     });
   }
 });
@@ -101,9 +130,9 @@ router.post("/", protect, async (req, res) => {
 router.put("/:id", protect, async (req, res) => {
   try {
     const { productName, brand, price, category, colors } = req.body;
-    
+
     const product = await Product.findById(req.params.id);
-    
+
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -113,13 +142,13 @@ router.put("/:id", protect, async (req, res) => {
       for (let i = 0; i < colors.length; i++) {
         const color = colors[i];
         const hasImages = (color.imageUrls && color.imageUrls.length > 0) || color.imageUrl;
-        
+
         if (!hasImages) {
-          return res.status(400).json({ 
-            message: `Color "${color.colorName || `#${i+1}`}" must have at least one image`
+          return res.status(400).json({
+            message: `Color "${color.colorName || `#${i + 1}`}" must have at least one image`
           });
         }
-        
+
         // Convert single imageUrl to imageUrls array
         if (color.imageUrl && !color.imageUrls) {
           color.imageUrls = [color.imageUrl];
@@ -133,25 +162,25 @@ router.put("/:id", protect, async (req, res) => {
     product.price = price || product.price;
     product.category = category || product.category;
     product.colors = colors || product.colors;
-    
+
     const updatedProduct = await product.save();
     console.log("Product updated successfully:", updatedProduct._id);
     res.json(updatedProduct);
-    
+
   } catch (error) {
     console.error("Error updating product:", error);
-    
+
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map(e => e.message);
-      return res.status(400).json({ 
-        message: "Validation failed", 
-        errors: errors 
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: errors
       });
     }
-    
-    res.status(500).json({ 
-      message: "Server Error while updating product", 
-      error: error.message 
+
+    res.status(500).json({
+      message: "Server Error while updating product",
+      error: error.message
     });
   }
 });
@@ -161,10 +190,44 @@ router.put("/:id", protect, async (req, res) => {
 router.delete("/:id", protect, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
+    
     if (product) {
+      
+      // --- START: New Cloudinary Delete Logic ---
+      
+      // 1. Collect all public_ids from all color variations
+      const publicIds = [];
+      product.colors.forEach(color => {
+        if (color.imageUrls && color.imageUrls.length > 0) {
+          color.imageUrls.forEach(url => {
+            const publicId = getPublicIdFromUrl(url);
+            if (publicId) {
+              publicIds.push(publicId);
+            }
+          });
+        }
+      });
+
+      // 2. Tell Cloudinary to delete all these images
+      if (publicIds.length > 0) {
+        console.log("Deleting assets from Cloudinary:", publicIds);
+        try {
+          // This API call can delete multiple images at once
+          await cloudinary.api.delete_resources(publicIds);
+        } catch (cldError) {
+          // Log the error but continue to delete from DB
+          console.error("Cloudinary delete error:", cldError.message);
+        }
+      }
+      
+      // --- END: New Cloudinary Delete Logic ---
+
+      // 3. Delete the product from MongoDB
       await product.deleteOne();
-      console.log("Product deleted successfully:", req.params.id);
-      res.json({ message: "Product removed" });
+      
+      console.log("Product deleted successfully from DB:", req.params.id);
+      res.json({ message: "Product and associated images removed" });
+      
     } else {
       res.status(404).json({ message: "Product not found" });
     }
