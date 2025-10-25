@@ -16,7 +16,8 @@ const allowedOrigins = [
   "http://127.0.0.1:3000",
   "http://localhost:5500", 
   "http://127.0.0.1:5500",
-  "https://rifakatshoegarden.netlify.app" // <-- THIS IS THE CHANGE
+  "https://rifakatshoegarden.netlify.app",
+  "https://rifakat.onrender.com"// <-- THIS IS THE CHANGE
 ];
 
 app.use(cors({
