@@ -27,7 +27,9 @@ body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Changed from center */
+  padding-top: 20px; /* Add some top padding */
+  padding-bottom: 20px; /* Add bottom padding */
 }
 
 /* ========== LOGIN CONTAINER ========== */
@@ -40,6 +42,7 @@ body {
   max-width: 420px;
   margin: 20px;
   animation: slideIn 0.5s ease-out;
+  align-self: center; /* Keep login centered */
 }
 
 @keyframes slideIn {
@@ -280,15 +283,14 @@ textarea:focus {
 
 /* ========== TABLE STYLES ========== */
 main {
-  padding: 25px;
+  padding: 0; /* Changed from 25px */
   overflow-x: auto;
 }
 
 .table-container {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  /* Removed border-radius and shadow */
 }
 
 table {
@@ -501,8 +503,22 @@ hr {
   box-shadow: var(--shadow-lg);
   opacity: 0;
   transform: translateX(100%);
-  transition: all 0;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
+.toast-message.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.toast-success {
+  background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+}
+
+.toast-error {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+}
+
 /* ========== UPLOADED IMAGES STYLES ========== */
 .uploaded-images-container {
   display: flex;
@@ -534,7 +550,7 @@ hr {
   display: block;
 }
 
--remove-image {
+.btn-remove-image {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -563,8 +579,7 @@ hr {
   background-color: #c82333; /* darker danger */
 }
 
-
-/* --- START: NEWLY ADDED CODE --- */
+/* --- START: PASSWORD TOGGLE --- */
 .show-password-container {
   display: flex;
   align-items: center;
@@ -588,4 +603,193 @@ hr {
   cursor: pointer;
   accent-color: var(--primary-color); /* Colors the checkbox */
 }
-/* --- END: NEWLY ADDED CODE --- */
+/* --- END: PASSWORD TOGGLE --- */
+
+
+/* --- START: NEW MOBILE-FRIENDLY STYLES --- */
+
+@media (max-width: 768px) {
+  body {
+    padding-top: 0;
+    padding-bottom: 0;
+    background: var(--bg-white); /* Simpler background on mobile */
+  }
+
+  .login-container,
+  .form-container,
+  .dashboard-container {
+    margin: 0;
+    width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    padding: 20px;
+    box-shadow: none;
+  }
+
+  /* --- Mobile Dashboard Header --- */
+  header {
+    flex-direction: column;
+    padding: 20px;
+    gap: 12px;
+  }
+
+  header h1 {
+    font-size: 1.4rem;
+    order: -1; /* Move h1 to the top */
+    flex-basis: auto;
+    text-align: left;
+    width: 100%;
+  }
+
+  .filter-container {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 8px;
+  }
+  
+  .filter-container label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .filter-container select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+  }
+  
+  header .btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+  }
+
+  /* --- Mobile Search --- */
+  .search-container {
+    padding: 15px 20px;
+  }
+  .search-container input {
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  /* --- Mobile Table Transformation --- */
+  main {
+    padding: 0;
+  }
+  
+  .table-container {
+    overflow-x: hidden;
+  }
+  
+  table {
+    min-width: 100%;
+  }
+
+  thead {
+    display: none; /* Hide the header row */
+  }
+
+  tbody, tr, td {
+    display: block;
+    width: 100%;
+  }
+
+  tr {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin: 15px 0;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    background: #fdfdfd;
+  }
+  
+  tr:first-child {
+    margin-top: 15px;
+  }
+  
+  tr:last-child {
+    margin-bottom: 15px;
+  }
+
+  td {
+    padding: 10px 5px;
+    border: none;
+    border-bottom: 1px dashed #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+  }
+  
+  td:last-child {
+    border-bottom: none;
+  }
+
+  /* Add labels using ::before pseudo-element */
+  td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-right: 15px;
+    flex-shrink: 0;
+  }
+
+  /* Style the first cell as a header */
+  td:first-child {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    padding-top: 0;
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  td:first-child::before {
+    display: none; /* No label for the first cell */
+  }
+
+  .actions {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .actions button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+  }
+
+  /* --- Mobile Form --- */
+  .form-container {
+    padding: 20px;
+  }
+  
+  .form-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .color-variation-item {
+    padding: 15px;
+  }
+  
+  .uploaded-images-container {
+    gap: 10px;
+  }
+  
+  .uploaded-image-item {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .btn-remove-image {
+    opacity: 1; /* Always show remove button on mobile */
+    background-color: var(--danger-color);
+  }
+}
+
+/* --- END: NEW MOBILE-FRIENDLY STYLES --- */

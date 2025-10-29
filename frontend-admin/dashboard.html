@@ -5,6 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - Rifakat Shoe Garden</title>
     <link rel="stylesheet" href="style.css" />
+    <style>
+      /* --- START: NEW STYLES FOR MULTI-DELETE --- */
+      .header-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .btn-danger {
+        background-color: var(--danger-color);
+        border-color: var(--danger-color);
+        color: white;
+      }
+
+      .btn-danger:hover:not(:disabled) {
+        background-color: #c82333;
+        border-color: #bd2130;
+      }
+
+      /* Style for the select-all checkbox */
+      th.select-col,
+      td.select-col {
+        width: 40px; /* Adjust width as needed */
+        text-align: center;
+        padding-left: 15px; /* Add some padding */
+        padding-right: 5px;
+      }
+
+      .product-select-checkbox,
+      #select-all-checkbox {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: var(--primary-color);
+      }
+
+      /* Mobile adjustments for checkboxes */
+      @media (max-width: 768px) {
+        td.select-col {
+          order: -1; /* Move checkbox to the top in card view */
+          padding: 10px 5px 10px 0;
+          border-bottom: none;
+          display: flex; /* Override the default flex */
+          justify-content: flex-end; /* Align checkbox to the right */
+        }
+
+        td.select-col::before {
+          display: none; /* Hide the default label */
+        }
+      }
+      /* --- END: NEW STYLES --- */
+    </style>
   </head>
   <body>
     <div class="dashboard-container">
@@ -23,8 +75,19 @@
           </select>
         </div>
 
-        <button class="btn btn-primary add-product-btn">Add New Product</button>
-        <button class="btn btn-secondary" id="logout-btn">Logout</button>
+        <div class="header-actions">
+          <button
+            class="btn btn-danger"
+            id="delete-selected-btn"
+            style="display: none"
+          >
+            Delete Selected
+          </button>
+          <button class="btn btn-primary add-product-btn">
+            Add New Product
+          </button>
+          <button class="btn btn-secondary" id="logout-btn">Logout</button>
+        </div>
       </header>
 
       <div class="search-container form-group">
@@ -36,22 +99,32 @@
       </div>
 
       <main>
-        <table>
-          <thead>
-            <tr>
-              <th>Product Name</th>
-              <th>Brand</th>
-              <th>Category</th>
-              <th>Price</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="product-list"></tbody>
-        </table>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th class="select-col">
+                  <input
+                    type="checkbox"
+                    id="select-all-checkbox"
+                    title="Select All Products"
+                  />
+                </th>
+
+                <th>Product Name</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="product-list"></tbody>
+          </table>
+        </div>
       </main>
     </div>
     <script src="utils.js"></script>
-    
+
     <script src="../js/config.js"></script>
     <script src="dashboard.js" defer></script>
   </body>

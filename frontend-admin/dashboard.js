@@ -7,19 +7,22 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // --- FIX: Use config.js for API URL ---
   if (typeof config === 'undefined') {
     alert("CRITICAL ERROR: config.js is not loaded. Admin panel will not work.");
     window.location.href = "login.html";
     return;
   }
   const API_URL = `${config.API_URL}/products`;
-  // --- END FIX ---
 
   const productList = document.getElementById("product-list");
   const categoryFilter = document.getElementById("category-filter");
-  const searchInput = document.getElementById("search-input"); // --- Get search input ---
+  const searchInput = document.getElementById("search-input");
   const logoutButton = document.getElementById("logout-btn");
+  
+  // --- START: NEW ELEMENTS FOR MULTI-DELETE ---
+  const selectAllCheckbox = document.getElementById("select-all-checkbox");
+  const deleteSelectedButton = document.getElementById("delete-selected-btn");
+  // --- END: NEW ELEMENTS ---
 
   let allProducts = [];
 
@@ -40,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   async function fetchAllProducts() {
-    productList.innerHTML = `<tr><td colspan="5" style="text-align: center;">Loading products...</td></tr>`;
+    productList.innerHTML = `<tr><td colspan="6" style="text-align: center;">Loading products...</td></tr>`; // Updated colspan
     try {
       const response = await fetch(API_URL, {
         method: "GET",
@@ -51,13 +54,17 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("Network response was not ok");
       }
       allProducts = await response.json();
-      applyFilters(); // Apply initial filters (which will just display all)
+      applyFilters();
+      // --- NEW: Reset checkbox states after fetching ---
+      selectAllCheckbox.checked = false;
+      updateDeleteButtonVisibility();
+      // --- END NEW ---
     } catch (error) {
       if (error.status === 401 || error.status === 403) {
         handleAuthError(error);
       } else {
         console.error("Error fetching products:", error);
-        productList.innerHTML = `<tr><td colspan="5">Error loading products. Is the backend server running?</td></tr>`;
+        productList.innerHTML = `<tr><td colspan="6">Error loading products. Is the backend server running?</td></tr>`; // Updated colspan
       }
     }
   }
@@ -65,40 +72,42 @@ document.addEventListener("DOMContentLoaded", () => {
   function displayProducts(products) {
     productList.innerHTML = "";
     if (products.length === 0) {
-      productList.innerHTML = `<tr><td colspan="5">No products found for this filter.</td></tr>`;
+      productList.innerHTML = `<tr><td colspan="6">No products found for this filter.</td></tr>`; // Updated colspan
       return;
     }
     products.forEach((product) => {
       const row = document.createElement("tr");
+      // --- CORRECTED HTML: Removed comments ---
       row.innerHTML = `
-                <td>${product.productName}</td>
-                <td>${product.brand || "N/A"}</td>
-                <td>${product.category}</td>
-                <td>₹${product.price}</td>
-                <td class="actions">
+                <td class="select-col" data-label="Select"> 
+                    <input type="checkbox" class="product-select-checkbox" value="${product._id}">
+                </td>
+                <td data-label="Product Name">${product.productName}</td> 
+                <td data-label="Brand">${product.brand || "N/A"}</td> 
+                <td data-label="Category">${product.category}</td> 
+                <td data-label="Price">₹${product.price}</td> 
+                <td data-label="Actions" class="actions"> 
                     <button class="btn-edit" data-id="${product._id}">Edit</button>
                     <button class="btn-delete" data-id="${product._id}">Delete</button>
                 </td>
             `;
+      // --- END CORRECTION ---
       productList.appendChild(row);
     });
   }
 
-  // --- FIX: Combined Filter Function ---
   function applyFilters() {
     const categoryValue = categoryFilter.value;
     const searchValue = searchInput.value.toLowerCase().trim();
 
     let filteredProducts = allProducts;
 
-    // 1. Apply category filter
     if (categoryValue !== "all") {
       filteredProducts = filteredProducts.filter(
         (product) => product.category === categoryValue
       );
     }
 
-    // 2. Apply search filter
     if (searchValue) {
       filteredProducts = filteredProducts.filter(
         (product) =>
@@ -108,11 +117,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     displayProducts(filteredProducts);
+    // --- NEW: Reset checkbox states after filtering ---
+    selectAllCheckbox.checked = false;
+    updateDeleteButtonVisibility();
+    // --- END NEW ---
   }
 
-  // --- Attach event listeners to both filters ---
   categoryFilter.addEventListener("change", applyFilters);
-  searchInput.addEventListener("input", applyFilters); // 'input' for real-time filtering
+  searchInput.addEventListener("input", applyFilters);
 
   async function deleteProduct(id, buttonElement) {
     if (!confirm("Are you sure you want to delete this product?")) return;
@@ -128,6 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error("Failed to delete product.");
       }
       fetchAllProducts(); // Refetch all products to update the list
+      if (typeof showMessage === 'function') showMessage('Product deleted successfully!', 'success');
     } catch (error) {
       if (error.status === 401 || error.status === 403) {
         handleAuthError(error);
@@ -140,6 +153,93 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // --- START: NEW MULTI-DELETE FUNCTIONS & LISTENERS ---
+
+  // Function to show/hide the "Delete Selected" button
+  function updateDeleteButtonVisibility() {
+    const checkedCheckboxes = productList.querySelectorAll(".product-select-checkbox:checked");
+    deleteSelectedButton.style.display = checkedCheckboxes.length > 0 ? "inline-flex" : "none";
+  }
+
+  // Function to handle the batch delete API call
+  async function deleteSelectedProducts() {
+    const checkedCheckboxes = productList.querySelectorAll(".product-select-checkbox:checked");
+    const productIdsToDelete = Array.from(checkedCheckboxes).map(cb => cb.value);
+
+    if (productIdsToDelete.length === 0) {
+      alert("Please select products to delete.");
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to delete ${productIdsToDelete.length} selected product(s)?`)) {
+      return;
+    }
+
+    deleteSelectedButton.disabled = true;
+    deleteSelectedButton.textContent = "Deleting...";
+
+    try {
+      // NOTE: The '/batch' endpoint needs to be created in the backend (productRoutes.js)
+      const response = await fetch(`${API_URL}/batch`, {
+        method: "DELETE",
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ ids: productIdsToDelete }), // Send IDs in the body
+      });
+
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 403) throw response;
+        const errorData = await response.json().catch(() => ({ message: "Failed to delete selected products." }));
+        throw new Error(errorData.message || "Failed to delete selected products.");
+      }
+      
+      const result = await response.json();
+      if (typeof showMessage === 'function') showMessage(result.message || 'Selected products deleted successfully!', 'success');
+      fetchAllProducts(); // Refresh the list
+      
+    } catch (error) {
+      if (error.status === 401 || error.status === 403) {
+        handleAuthError(error);
+      } else {
+        console.error("Error deleting selected products:", error);
+        if (typeof showMessage === 'function') showMessage(`Error: ${error.message}`, 'error'); else alert(`Error: ${error.message}`);
+      }
+    } finally {
+      deleteSelectedButton.disabled = false;
+      deleteSelectedButton.textContent = "Delete Selected";
+      // Ensure button is hidden if no items remain selected (e.g., after successful delete)
+      updateDeleteButtonVisibility();
+    }
+  }
+
+  // Listener for the "Select All" checkbox
+  selectAllCheckbox.addEventListener("change", (event) => {
+    const isChecked = event.target.checked;
+    productList.querySelectorAll(".product-select-checkbox").forEach(checkbox => {
+      checkbox.checked = isChecked;
+    });
+    updateDeleteButtonVisibility();
+  });
+
+  // Listener for individual product checkboxes (using event delegation on the table body)
+  productList.addEventListener("change", (event) => {
+    if (event.target.classList.contains("product-select-checkbox")) {
+      const allCheckboxes = productList.querySelectorAll(".product-select-checkbox");
+      const checkedCount = productList.querySelectorAll(".product-select-checkbox:checked").length;
+      
+      // Update "Select All" checkbox state
+      selectAllCheckbox.checked = checkedCount > 0 && checkedCount === allCheckboxes.length;
+      selectAllCheckbox.indeterminate = checkedCount > 0 && checkedCount < allCheckboxes.length;
+      
+      updateDeleteButtonVisibility();
+    }
+  });
+
+  // Listener for the "Delete Selected" button
+  deleteSelectedButton.addEventListener("click", deleteSelectedProducts);
+
+  // --- END: NEW MULTI-DELETE ---
+
+  // Keep existing single delete/edit listener
   productList.addEventListener("click", (event) => {
     const target = event.target;
     const id = target.dataset.id;
@@ -149,6 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (target.classList.contains("btn-edit")) {
       window.location.href = `product-form.html?id=${id}`;
     }
+    // Checkbox clicks are handled by the 'change' event listener above
   });
 
   const addProductBtn = document.querySelector(".add-product-btn");

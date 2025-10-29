@@ -14,18 +14,24 @@ const cloudinary = require('cloudinary').v2; // <-- ADDED THIS
 const getPublicIdFromUrl = (url) => {
   try {
     const parts = url.split('/');
+    // Find the index of 'upload'
     const uploadIndex = parts.indexOf('upload');
-    if (uploadIndex === -1) return null;
+    if (uploadIndex === -1 || uploadIndex + 2 >= parts.length) {
+      // Check if 'upload' exists and there are parts after the version number
+      console.warn('Could not find standard Cloudinary path structure in url:', url);
+      return null;
+    }
 
-    // Get from 'v123456' onwards
-    // e.g., v123/rifakat-shoe-garden/abc.jpg
-    const pathWithVersion = parts.slice(uploadIndex + 1).join('/');
+    // Get the parts after the version number (e.g., ['rifakat-shoe-garden', 'abc.jpg'])
+    const pathParts = parts.slice(uploadIndex + 2);
+    if (pathParts.length === 0) return null;
 
-    // Remove version: 'rifakat-shoe-garden/abc.jpg'
-    const publicIdWithExt = pathWithVersion.substring(pathWithVersion.indexOf('/') + 1);
+    // Join the path parts: 'rifakat-shoe-garden/abc.jpg'
+    const publicIdWithExt = pathParts.join('/');
 
-    // Remove extension: 'rifakat-shoe-garden/abc'
-    const publicId = publicIdWithExt.substring(0, publicIdWithExt.lastIndexOf('.'));
+    // Remove the extension: 'rifakat-shoe-garden/abc'
+    const lastDotIndex = publicIdWithExt.lastIndexOf('.');
+    const publicId = lastDotIndex === -1 ? publicIdWithExt : publicIdWithExt.substring(0, lastDotIndex);
 
     return publicId;
   } catch (e) {
@@ -33,6 +39,7 @@ const getPublicIdFromUrl = (url) => {
     return null;
   }
 }
+
 
 // @desc   Fetch all products or filter by category
 // @route  GET /api/products
@@ -89,10 +96,11 @@ router.post("/", protect, async (req, res) => {
       }
 
       // Convert single imageUrl to imageUrls array for consistency
-      if (color.imageUrl && !color.imageUrls) {
+      if (color.imageUrl && (!color.imageUrls || color.imageUrls.length === 0)) {
         color.imageUrls = [color.imageUrl];
-        delete color.imageUrl;
       }
+      // Remove the old single imageUrl if it exists after conversion
+      if (color.imageUrl) delete color.imageUrl;
     }
 
     const product = new Product({
@@ -150,10 +158,11 @@ router.put("/:id", protect, async (req, res) => {
         }
 
         // Convert single imageUrl to imageUrls array
-        if (color.imageUrl && !color.imageUrls) {
+        if (color.imageUrl && (!color.imageUrls || color.imageUrls.length === 0)) {
           color.imageUrls = [color.imageUrl];
-          delete color.imageUrl;
         }
+        // Remove the old single imageUrl if it exists after conversion
+        if (color.imageUrl) delete color.imageUrl;
       }
     }
 
@@ -185,16 +194,13 @@ router.put("/:id", protect, async (req, res) => {
   }
 });
 
-// @desc   Delete a product
+// @desc   Delete a single product
 // @route  DELETE /api/products/:id
 router.delete("/:id", protect, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     
     if (product) {
-      
-      // --- START: New Cloudinary Delete Logic ---
-      
       // 1. Collect all public_ids from all color variations
       const publicIds = [];
       product.colors.forEach(color => {
@@ -203,6 +209,8 @@ router.delete("/:id", protect, async (req, res) => {
             const publicId = getPublicIdFromUrl(url);
             if (publicId) {
               publicIds.push(publicId);
+            } else {
+              console.warn(`Could not extract public_id for deletion from URL: ${url}`);
             }
           });
         }
@@ -210,20 +218,20 @@ router.delete("/:id", protect, async (req, res) => {
 
       // 2. Tell Cloudinary to delete all these images
       if (publicIds.length > 0) {
-        console.log("Deleting assets from Cloudinary:", publicIds);
+        console.log(`Attempting to delete ${publicIds.length} assets from Cloudinary for product ${req.params.id}:`, publicIds);
         try {
-          // This API call can delete multiple images at once
-          await cloudinary.api.delete_resources(publicIds);
+          const result = await cloudinary.api.delete_resources(publicIds);
+          console.log("Cloudinary deletion result:", result);
         } catch (cldError) {
-          // Log the error but continue to delete from DB
-          console.error("Cloudinary delete error:", cldError.message);
+          console.error("Cloudinary delete error (non-fatal):", cldError.message || cldError);
+          // Log but continue, as we still want to remove from DB
         }
+      } else {
+         console.log(`No Cloudinary images found to delete for product ${req.params.id}`);
       }
       
-      // --- END: New Cloudinary Delete Logic ---
-
       // 3. Delete the product from MongoDB
-      await product.deleteOne();
+      await Product.deleteOne({ _id: req.params.id }); // Use deleteOne with filter
       
       console.log("Product deleted successfully from DB:", req.params.id);
       res.json({ message: "Product and associated images removed" });
@@ -236,5 +244,74 @@ router.delete("/:id", protect, async (req, res) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 });
+
+
+// --- START: NEW BATCH DELETE ROUTE ---
+// @desc   Delete multiple products by their IDs
+// @route  DELETE /api/products/batch
+router.delete("/batch", protect, async (req, res) => {
+  try {
+    const { ids } = req.body; // Expect an array of IDs in the request body
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "Invalid input: 'ids' must be a non-empty array." });
+    }
+
+    // 1. Find all products matching the provided IDs
+    const productsToDelete = await Product.find({ _id: { $in: ids } });
+
+    if (!productsToDelete || productsToDelete.length === 0) {
+      return res.status(404).json({ message: "No products found matching the provided IDs." });
+    }
+
+    // 2. Collect all Cloudinary public_ids from all products and their color variations
+    const allPublicIds = [];
+    productsToDelete.forEach(product => {
+      product.colors.forEach(color => {
+        if (color.imageUrls && color.imageUrls.length > 0) {
+          color.imageUrls.forEach(url => {
+            const publicId = getPublicIdFromUrl(url);
+            if (publicId) {
+              allPublicIds.push(publicId);
+            } else {
+              console.warn(`Batch delete: Could not extract public_id from URL: ${url}`);
+            }
+          });
+        }
+      });
+    });
+    
+    const uniquePublicIds = [...new Set(allPublicIds)]; // Ensure uniqueness
+
+    // 3. Tell Cloudinary to delete all collected images
+    if (uniquePublicIds.length > 0) {
+      console.log(`Attempting to batch delete ${uniquePublicIds.length} assets from Cloudinary for products:`, ids);
+      try {
+        const result = await cloudinary.api.delete_resources(uniquePublicIds);
+        console.log("Cloudinary batch deletion result:", result);
+      } catch (cldError) {
+        console.error("Cloudinary batch delete error (non-fatal):", cldError.message || cldError);
+        // Log but continue
+      }
+    } else {
+      console.log(`No Cloudinary images found to batch delete for products:`, ids);
+    }
+
+    // 4. Delete all products from MongoDB
+    const deleteResult = await Product.deleteMany({ _id: { $in: ids } });
+
+    console.log(`Batch delete successful from DB: ${deleteResult.deletedCount} products removed.`);
+    res.json({ 
+      message: `Successfully deleted ${deleteResult.deletedCount} product(s) and associated images.`,
+      deletedCount: deleteResult.deletedCount 
+    });
+
+  } catch (error) {
+    console.error("Error during batch delete:", error);
+    res.status(500).json({ message: "Server Error during batch deletion", error: error.message });
+  }
+});
+// --- END: NEW BATCH DELETE ROUTE ---
+
 
 module.exports = router;
