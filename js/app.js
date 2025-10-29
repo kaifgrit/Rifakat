@@ -1,11 +1,9 @@
-// js/app.js - CORRECTED ORDER & ENHANCED VERSION
+// js/app.js - Enhanced with Quick View Modal
 
 document.addEventListener("DOMContentLoaded", () => {
   if (typeof config === "undefined") {
     console.error("ERROR: config.js not loaded!");
-    alert(
-      "Configuration error. Please ensure config.js is loaded before app.js"
-    );
+    alert("Configuration error. Please ensure config.js is loaded before app.js");
     return;
   }
 
@@ -19,85 +17,301 @@ document.addEventListener("DOMContentLoaded", () => {
   const filterSidebar = document.getElementById("filter-sidebar");
   const mobileFilterToggle = document.getElementById("mobile-filter-toggle");
   const closeFilterSidebar = document.getElementById("close-filter-sidebar");
-  const mobileFilterBackdrop = document.getElementById(
-    "mobile-filter-backdrop"
-  );
+  const mobileFilterBackdrop = document.getElementById("mobile-filter-backdrop");
   const sortBy = document.getElementById("sort-by");
   const brandFilterList = document.getElementById("brand-filter-list");
   const applyFiltersBtn = document.getElementById("apply-filters");
   const clearFiltersBtn = document.getElementById("clear-filters");
   const productCountSpan = document.getElementById("product-count");
-  const productCountDesktopSpan = document.getElementById(
-    "product-count-desktop"
-  );
+  const productCountDesktopSpan = document.getElementById("product-count-desktop");
 
   let glightboxInstance = null;
   let category = "";
   let pageHeader = "";
-  let allCategoryProducts = []; // Master product list
+  let allCategoryProducts = [];
+  let currentQuickViewProduct = null;
 
-  // ==========================================================
-  // START: MOVED FUNCTION DEFINITIONS EARLIER
-  // ==========================================================
+  // ========================================
+  // QUICK VIEW MODAL FUNCTIONS
+  // ========================================
+
+  const createQuickViewModal = () => {
+    const modal = document.createElement("div");
+    modal.id = "quick-view-modal";
+    modal.className = "quick-view-modal";
+    modal.innerHTML = `
+      <div class="quick-view-content">
+        <button class="quick-view-close" aria-label="Close">&times;</button>
+        <div class="quick-view-body">
+          <div class="quick-view-gallery">
+            <div class="quick-view-main-image">
+              <img src="" alt="" id="quick-view-main-img">
+            </div>
+            <div class="quick-view-thumbnails" id="quick-view-thumbnails"></div>
+          </div>
+          <div class="quick-view-details">
+            <div class="quick-view-brand" id="quick-view-brand"></div>
+            <h2 class="quick-view-title" id="quick-view-title"></h2>
+            <div class="quick-view-price" id="quick-view-price"></div>
+            <div class="quick-view-category" id="quick-view-category"></div>
+            
+            <div class="quick-view-color-section">
+              <div>
+                <span class="quick-view-color-label">Color:</span>
+                <span class="quick-view-color-name" id="quick-view-selected-color"></span>
+              </div>
+              <div class="quick-view-color-swatches" id="quick-view-colors"></div>
+            </div>
+            
+            <div class="quick-view-size-section">
+              <div class="quick-view-size-label">Select Size:</div>
+              <div class="quick-view-size-buttons" id="quick-view-sizes"></div>
+            </div>
+            
+            <button class="quick-view-buy-button" id="quick-view-buy">
+              Buy on WhatsApp
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // Event listeners
+    modal.querySelector(".quick-view-close").addEventListener("click", closeQuickView);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeQuickView();
+    });
+
+    // ESC key to close
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("active")) {
+        closeQuickView();
+      }
+    });
+
+    return modal;
+  };
+
+  const openQuickView = (product) => {
+    currentQuickViewProduct = product;
+    let modal = document.getElementById("quick-view-modal");
+    
+    if (!modal) {
+      modal = createQuickViewModal();
+    }
+
+    // Populate modal
+    const firstColor = product.colors[0] || {};
+    const urls = firstColor.imageUrls || (firstColor.imageUrl ? [firstColor.imageUrl] : []);
+    const firstImage = urls[0] || "https://via.placeholder.com/400x400.png?text=No+Image";
+
+    document.getElementById("quick-view-brand").textContent = product.brand || "Generic";
+    document.getElementById("quick-view-title").textContent = product.productName;
+    document.getElementById("quick-view-price").textContent = `₹${product.price}`;
+    document.getElementById("quick-view-category").textContent = product.category;
+    document.getElementById("quick-view-selected-color").textContent = firstColor.colorName || "Default";
+
+    // Main image
+    const mainImg = document.getElementById("quick-view-main-img");
+    mainImg.src = firstImage;
+    mainImg.alt = product.productName;
+
+    // Color swatches
+    const colorsContainer = document.getElementById("quick-view-colors");
+    colorsContainer.innerHTML = product.colors.map((color, index) => `
+      <button class="quick-view-color-swatch ${index === 0 ? "active" : ""}"
+              style="background-color: ${color.colorHexCode || "#ffffff"}"
+              data-color-index="${index}"
+              title="${color.colorName || 'Color ' + (index + 1)}">
+      </button>
+    `).join("");
+
+    // Thumbnails
+    updateQuickViewThumbnails(urls, 0);
+
+    // Sizes
+    updateQuickViewSizes(firstColor.sizes || []);
+
+    // Show modal
+    modal.classList.add("active");
+    document.body.style.overflow = "hidden";
+  };
+
+  const updateQuickViewThumbnails = (imageUrls, activeIndex = 0) => {
+    const thumbnailsContainer = document.getElementById("quick-view-thumbnails");
+    thumbnailsContainer.innerHTML = imageUrls.map((url, index) => `
+      <div class="quick-view-thumbnail ${index === activeIndex ? "active" : ""}" data-image-index="${index}">
+        <img src="${url}" alt="Thumbnail ${index + 1}">
+      </div>
+    `).join("");
+  };
+
+  const updateQuickViewSizes = (sizes) => {
+    const sizesContainer = document.getElementById("quick-view-sizes");
+    if (sizes && sizes.length > 0) {
+      sizesContainer.innerHTML = sizes.map(size => `
+        <button class="quick-view-size-button" data-size="${size}">${size}</button>
+      `).join("");
+    } else {
+      sizesContainer.innerHTML = '<p class="quick-view-no-sizes">One size fits all</p>';
+    }
+  };
+
+  const closeQuickView = () => {
+    const modal = document.getElementById("quick-view-modal");
+    if (modal) {
+      modal.classList.remove("active");
+      document.body.style.overflow = "";
+      currentQuickViewProduct = null;
+    }
+  };
+
+  // Quick view modal event delegation
+  document.addEventListener("click", (e) => {
+    const modal = document.getElementById("quick-view-modal");
+    if (!modal || !currentQuickViewProduct) return;
+
+    // Color swatch click
+    if (e.target.matches(".quick-view-color-swatch")) {
+      const colorIndex = parseInt(e.target.dataset.colorIndex);
+      const selectedColor = currentQuickViewProduct.colors[colorIndex];
+      
+      if (!selectedColor) return;
+
+      // Update active swatch
+      modal.querySelectorAll(".quick-view-color-swatch").forEach(s => s.classList.remove("active"));
+      e.target.classList.add("active");
+
+      // Update color name
+      document.getElementById("quick-view-selected-color").textContent = selectedColor.colorName || "Default";
+
+      // Update images
+      const urls = selectedColor.imageUrls || (selectedColor.imageUrl ? [selectedColor.imageUrl] : []);
+      const firstImage = urls[0] || "https://via.placeholder.com/400x400.png?text=No+Image";
+      
+      const mainImg = document.getElementById("quick-view-main-img");
+      mainImg.src = firstImage;
+
+      updateQuickViewThumbnails(urls, 0);
+
+      // Update sizes
+      updateQuickViewSizes(selectedColor.sizes || []);
+    }
+
+    // Thumbnail click
+    if (e.target.closest(".quick-view-thumbnail")) {
+      const thumbnail = e.target.closest(".quick-view-thumbnail");
+      const imageIndex = parseInt(thumbnail.dataset.imageIndex);
+      const activeColorIndex = Array.from(modal.querySelectorAll(".quick-view-color-swatch")).findIndex(s => s.classList.contains("active"));
+      const selectedColor = currentQuickViewProduct.colors[activeColorIndex] || currentQuickViewProduct.colors[0];
+      const urls = selectedColor.imageUrls || [];
+
+      if (urls[imageIndex]) {
+        document.getElementById("quick-view-main-img").src = urls[imageIndex];
+        modal.querySelectorAll(".quick-view-thumbnail").forEach(t => t.classList.remove("active"));
+        thumbnail.classList.add("active");
+      }
+    }
+
+    // Size button click
+    if (e.target.matches(".quick-view-size-button")) {
+      modal.querySelectorAll(".quick-view-size-button").forEach(btn => btn.classList.remove("active"));
+      e.target.classList.add("active");
+    }
+
+    // Buy button click
+    if (e.target.matches("#quick-view-buy")) {
+      const activeColorSwatch = modal.querySelector(".quick-view-color-swatch.active");
+      const colorIndex = activeColorSwatch ? parseInt(activeColorSwatch.dataset.colorIndex) : 0;
+      const selectedColor = currentQuickViewProduct.colors[colorIndex] || {};
+
+      const activeSizeButton = modal.querySelector(".quick-view-size-button.active");
+      const selectedSize = activeSizeButton ? activeSizeButton.dataset.size : "";
+
+      const hasAvailableSizes = selectedColor.sizes && selectedColor.sizes.length > 0;
+
+      if (hasAvailableSizes && !selectedSize) {
+        alert("Please select a size before purchasing.");
+        const sizeSection = modal.querySelector(".quick-view-size-section");
+        sizeSection.classList.add("shake-animation");
+        setTimeout(() => sizeSection.classList.remove("shake-animation"), 600);
+        return;
+      }
+
+      const mainImg = document.getElementById("quick-view-main-img");
+      const imageUrl = mainImg.src;
+
+      let message = `🛒 *NEW ORDER REQUEST*\n`;
+      message += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+      message += `📦 *PRODUCT DETAILS*\n`;
+      message += `• Product: *${currentQuickViewProduct.productName}*\n`;
+      if (currentQuickViewProduct.brand !== "Generic") message += `• Brand: ${currentQuickViewProduct.brand}\n`;
+      message += `• Category: ${currentQuickViewProduct.category}\n`;
+      message += `• Color: ${selectedColor.colorName || "Default"}\n`;
+      if (selectedSize) {
+        message += `• Size: *${selectedSize}*\n`;
+      } else if (!hasAvailableSizes) {
+        message += `• Size: Not Applicable\n`;
+      }
+      message += `• Price: *₹${currentQuickViewProduct.price}*\n\n`;
+      message += `📸 *Selected Image:*\n${imageUrl}\n\n`;
+      message += `━━━━━━━━━━━━━━━━━━━━\n`;
+      message += `💬 Please confirm availability and proceed with the order.`;
+
+      const whatsappURL = `https://wa.me/919050211616?text=${encodeURIComponent(message)}`;
+      window.open(whatsappURL, "_blank");
+    }
+  });
+
+  // ========================================
+  // ORIGINAL FUNCTIONS
+  // ========================================
 
   const fetchProductsByCategory = async (categoryName) => {
     try {
-      productContainer.innerHTML =
-        '<p class="text-center text-gray-600">Loading products...</p>'; // Show loading message
+      productContainer.innerHTML = '<p class="text-center text-gray-600">Loading products...</p>';
       const response = await fetch(`${API_URL}?category=${categoryName}`);
-      if (!response.ok)
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const products = await response.json();
 
       allCategoryProducts = products;
       populateFilters();
-      applyFiltersAndSort(); // This will call displayProducts
+      applyFiltersAndSort();
     } catch (error) {
       console.error("Failed to fetch products:", error);
-      productContainer.innerHTML =
-        '<p class="text-center text-red-500">Could not load products. Please ensure the backend server is running and accessible.</p>';
+      productContainer.innerHTML = '<p class="text-center text-red-500">Could not load products. Please ensure the backend server is running and accessible.</p>';
     }
   };
 
   const populateFilters = () => {
     if (!brandFilterList) return;
 
-    const brands = [
-      ...new Set(allCategoryProducts.map((p) => p.brand || "Other")),
-    ].sort();
+    const brands = [...new Set(allCategoryProducts.map((p) => p.brand || "Other"))].sort();
 
     if (brands.length === 0) {
-      brandFilterList.innerHTML =
-        '<p class="text-gray-500 text-sm">No brands available.</p>';
+      brandFilterList.innerHTML = '<p class="text-gray-500 text-sm">No brands available.</p>';
       return;
     }
 
-    brandFilterList.innerHTML = brands
-      .map(
-        (brand) => `
+    brandFilterList.innerHTML = brands.map(brand => `
       <label class="flex items-center gap-2 cursor-pointer">
         <input type="checkbox" class="brand-checkbox accent-red-500" value="${brand}">
         <span class="text-sm">${brand}</span>
       </label>
-    `
-      )
-      .join("");
+    `).join("");
   };
 
   const applyFiltersAndSort = () => {
-    if (!productContainer) return; // Don't run on index.html
+    if (!productContainer) return;
 
     let processedProducts = [...allCategoryProducts];
 
     // 1. Filter by Brand
-    const selectedBrands = Array.from(
-      brandFilterList.querySelectorAll('input[type="checkbox"]:checked')
-    ).map((cb) => cb.value);
+    const selectedBrands = Array.from(brandFilterList.querySelectorAll('input[type="checkbox"]:checked')).map((cb) => cb.value);
 
     if (selectedBrands.length > 0) {
-      processedProducts = processedProducts.filter((p) =>
-        selectedBrands.includes(p.brand || "Other")
-      );
+      processedProducts = processedProducts.filter((p) => selectedBrands.includes(p.brand || "Other"));
     }
 
     // 2. Sort
@@ -110,16 +324,11 @@ document.addEventListener("DOMContentLoaded", () => {
         processedProducts.sort((a, b) => b.price - a.price);
         break;
       case "brand-asc":
-        processedProducts.sort((a, b) =>
-          (a.brand || "Other").localeCompare(b.brand || "Other")
-        );
+        processedProducts.sort((a, b) => (a.brand || "Other").localeCompare(b.brand || "Other"));
         break;
       case "brand-desc":
-        processedProducts.sort((a, b) =>
-          (b.brand || "Other").localeCompare(a.brand || "Other")
-        );
+        processedProducts.sort((a, b) => (b.brand || "Other").localeCompare(a.brand || "Other"));
         break;
-      // 'default' case does nothing, keeps original (fetched) order
     }
 
     // 3. Display
@@ -127,27 +336,20 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const displayProducts = (products) => {
-    productContainer.innerHTML = ""; // Clear previous content or loading message
+    productContainer.innerHTML = "";
 
-    // Update product count
     const count = products.length;
     const countText = `${count} ${count === 1 ? "Product" : "Products"}`;
     if (productCountSpan) productCountSpan.textContent = countText;
-    if (productCountDesktopSpan)
-      productCountDesktopSpan.textContent = countText;
+    if (productCountDesktopSpan) productCountDesktopSpan.textContent = countText;
 
     if (products.length === 0) {
-      productContainer.innerHTML =
-        '<p class="text-center text-gray-600">No products found matching your filters.</p>';
+      productContainer.innerHTML = '<p class="text-center text-gray-600">No products found matching your filters.</p>';
       return;
     }
 
-    const sortValue = sortBy ? sortBy.value : "default";
-
-    // Always display in a single grid, respecting the sort order
     const productGrid = document.createElement("div");
-    productGrid.className =
-      "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";
+    productGrid.className = "grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4";
     productContainer.appendChild(productGrid);
 
     products.forEach((product) => {
@@ -155,15 +357,11 @@ document.addEventListener("DOMContentLoaded", () => {
       productGrid.appendChild(card);
     });
 
-    // Re-initialize GLightbox after products are displayed
     if (glightboxInstance) glightboxInstance.destroy();
     if (typeof GLightbox !== "undefined") {
       setTimeout(() => {
-        // Add a small delay for images to potentially load
         glightboxInstance = GLightbox({ selector: ".glightbox" });
       }, 100);
-    } else {
-      console.warn("GLightbox library not found or loaded.");
     }
   };
 
@@ -180,36 +378,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const firstColor = product.colors[0] || {};
     const urls = firstColor.imageUrls || (firstColor.imageUrl ? [firstColor.imageUrl] : []);
-    const firstImageUrl = urls[0] || 'https://via.placeholder.com/400x400.png?text=No+Image';
+    const firstImageUrl = urls[0] || "https://via.placeholder.com/400x400.png?text=No+Image";
 
     const colorSwatchesHTML = product.colors.map((color, index) => `
-        <button class="color-swatch ${index === 0 ? "active" : ""}"
-                style="background-color: ${color.colorHexCode || "#ffffff"}; border: 1px solid #ccc;"
-                data-color-index="${index}"
-                aria-label="${color.colorName || 'Color ' + (index + 1)}">
-        </button>
+      <button class="color-swatch ${index === 0 ? "active" : ""}"
+              style="background-color: ${color.colorHexCode || "#ffffff"}; border: 1px solid #ccc;"
+              data-color-index="${index}"
+              aria-label="${color.colorName || 'Color ' + (index + 1)}">
+      </button>
     `).join("");
 
-    // --- CLEANED HTML STRING (Removed comments) ---
     card.innerHTML = `
-      <a href="${firstImageUrl}" class="glightbox product-image-container relative overflow-hidden aspect-square block" data-gallery="product-${product._id}">
+      <div class="product-image-container relative overflow-hidden aspect-square cursor-pointer">
         <img src="${firstImageUrl}"
              alt="${product.productName}"
              class="main-product-image w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 flex items-center justify-center transition-opacity duration-300 pointer-events-none">
-           <svg class="w-8 h-8 text-white opacity-0 group-hover:opacity-80 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
-         </div>
-      </a>
+        <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 flex items-center justify-center transition-opacity duration-300">
+          <button class="quick-view-btn opacity-0 group-hover:opacity-100 transition-opacity bg-white text-gray-800 px-4 py-2 rounded-lg font-semibold text-sm shadow-lg hover:bg-gray-100">
+            View Details
+          </button>
+        </div>
+      </div>
       <div class="product-content p-3 flex-grow flex flex-col text-center">
         ${product.brand ? `<p class="product-brand text-xs text-gray-500 mb-1">${product.brand}</p>` : ''}
         <h3 class="product-name text-sm font-semibold mb-2 leading-tight">${product.productName}</h3>
         <div class="color-swatches mb-3">${colorSwatchesHTML}</div>
-        <p class="product-price text-base font-bold mt-auto mb-3">₹${product.price}</p>
-        <button class="buy-button cta-button block w-full text-white font-bold py-2 px-3 rounded-md text-xs uppercase tracking-wider">
-          Buy on WhatsApp
-        </button>
+        <p class="product-price text-base font-bold mt-auto mb-0">₹${product.price}</p>
       </div>
     `;
+
+    // Quick view button click
+    card.querySelector(".quick-view-btn")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openQuickView(product);
+    });
+
     return card;
   };
 
@@ -238,22 +442,20 @@ document.addEventListener("DOMContentLoaded", () => {
       pageTitleElement.textContent = pageHeader;
       const descElement = pageTitleElement.nextElementSibling;
       if (descElement) {
-        descElement.textContent =
-          "Filter and sort to find the perfect pair for your style.";
+        descElement.textContent = "Filter and sort to find the perfect pair for your style.";
       }
     }
 
-    // Initial fetch - NOW HAPPENS AFTER FUNCTION IS DEFINED
     fetchProductsByCategory(category);
 
-    // --- Add event listeners for filter UI ---
+    // Filter event listeners
     if (mobileFilterToggle) {
       mobileFilterToggle.addEventListener("click", () => {
         filterSidebar.classList.add("open");
         mobileFilterBackdrop.classList.add("open");
       });
     }
-    // ... (rest of the filter event listeners remain the same) ...
+
     if (closeFilterSidebar) {
       closeFilterSidebar.addEventListener("click", () => {
         filterSidebar.classList.remove("open");
@@ -271,7 +473,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (applyFiltersBtn) {
       applyFiltersBtn.addEventListener("click", () => {
         applyFiltersAndSort();
-        // Close sidebar on mobile after applying
         if (window.innerWidth < 768) {
           filterSidebar.classList.remove("open");
           mobileFilterBackdrop.classList.remove("open");
@@ -281,14 +482,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (clearFiltersBtn) {
       clearFiltersBtn.addEventListener("click", () => {
-        if (sortBy) sortBy.value = "default"; // Check if sortBy exists
+        if (sortBy) sortBy.value = "default";
         if (brandFilterList) {
-          // Check if brandFilterList exists
-          brandFilterList
-            .querySelectorAll('input[type="checkbox"]')
-            .forEach((checkbox) => {
-              checkbox.checked = false;
-            });
+          brandFilterList.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+            checkbox.checked = false;
+          });
         }
         applyFiltersAndSort();
         if (window.innerWidth < 768) {
@@ -297,171 +495,37 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
     }
-  } // --- End of category page logic ---
+  }
 
-  // --- Event Listener for Product Card Interactions (Color change, Size select, Buy, Image click) ---
+  // Color swatch interaction on card
   if (productContainer) {
     productContainer.addEventListener("click", function (e) {
       const card = e.target.closest(".product-card");
       if (!card) return;
 
-      const productColors = JSON.parse(card.dataset.productColors || "[]"); // Add default empty array
+      const productColors = JSON.parse(card.dataset.productColors || "[]");
 
-      // --- Color Swatch Click ---
       if (e.target.matches(".color-swatch")) {
         e.preventDefault();
         e.stopPropagation();
 
         const colorIndex = parseInt(e.target.dataset.colorIndex);
-        if (
-          isNaN(colorIndex) ||
-          colorIndex < 0 ||
-          colorIndex >= productColors.length
-        )
-          return; // Basic validation
+        if (isNaN(colorIndex) || colorIndex < 0 || colorIndex >= productColors.length) return;
 
         const selectedColor = productColors[colorIndex];
 
-        // Update active swatch
-        card
-          .querySelectorAll(".color-swatch")
-          .forEach((swatch) => swatch.classList.remove("active"));
+        card.querySelectorAll(".color-swatch").forEach((swatch) => swatch.classList.remove("active"));
         e.target.classList.add("active");
 
-        // Update main image and lightbox link
         const mainImage = card.querySelector(".main-product-image");
-        const imageLink = card.querySelector(
-          ".product-image-container.glightbox"
-        ); // Target the link now
-        const urls =
-          selectedColor.imageUrls ||
-          (selectedColor.imageUrl ? [selectedColor.imageUrl] : []);
-        const newImageUrl =
-          urls[0] || "https://via.placeholder.com/800x800.png?text=No+Image";
+        const urls = selectedColor.imageUrls || (selectedColor.imageUrl ? [selectedColor.imageUrl] : []);
+        const newImageUrl = urls[0] || "https://via.placeholder.com/800x800.png?text=No+Image";
 
         if (mainImage) {
           mainImage.src = newImageUrl;
-          mainImage.alt = `${card.dataset.productName} - ${
-            selectedColor.colorName || ""
-          }`;
-        }
-        if (imageLink) {
-          imageLink.href = newImageUrl; // Update the href for GLightbox
-          imageLink.dataset.gallery = `product-${card.dataset.productId}-${colorIndex}`; // Unique gallery per color
-        }
-
-        // Update sizes
-        const sizeButtonsGrid = card.querySelector(".size-buttons-grid");
-        const sizeContainer = card.querySelector(".size-buttons-container");
-
-        if (sizeButtonsGrid) {
-          if (selectedColor.sizes && selectedColor.sizes.length > 0) {
-            const sizeButtons = selectedColor.sizes
-              .map(
-                (size) =>
-                  `<button class="size-button" data-size="${size}" type="button">${size}</button>`
-              )
-              .join("");
-            sizeButtonsGrid.innerHTML = sizeButtons;
-            if (sizeContainer) sizeContainer.style.display = "block"; // Make sure container is visible
-          } else {
-            sizeButtonsGrid.innerHTML =
-              '<span class="text-gray-500 text-sm">Sizes not available for this color</span>';
-            if (sizeContainer) sizeContainer.style.display = "block"; // Keep container visible to show message
-          }
-        } else if (sizeContainer) {
-          // If the grid doesn't exist but container does, hide container if no sizes
-          sizeContainer.style.display =
-            selectedColor.sizes && selectedColor.sizes.length > 0
-              ? "block"
-              : "none";
+          mainImage.alt = `${card.dataset.productName} - ${selectedColor.colorName || ""}`;
         }
       }
-      // --- Size Button Click ---
-      else if (e.target.matches(".size-button")) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        card
-          .querySelectorAll(".size-button")
-          .forEach((btn) => btn.classList.remove("active"));
-        e.target.classList.add("active");
-      }
-      // --- Buy Button Click ---
-      else if (e.target.matches(".buy-button")) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const productName = card.dataset.productName;
-        const productBrand = card.dataset.productBrand;
-        const productCategory = card.dataset.productCategory;
-        const productPrice = card.dataset.productPrice;
-
-        const activeSwatch = card.querySelector(".color-swatch.active");
-        const activeSwatchIndex = activeSwatch
-          ? parseInt(activeSwatch.dataset.colorIndex)
-          : 0;
-        const selectedColor =
-          productColors[activeSwatchIndex >= 0 ? activeSwatchIndex : 0] || {};
-
-        const colorName = selectedColor.colorName || "Default";
-
-        const activeSizeButton = card.querySelector(".size-button.active");
-        let selectedSize = "";
-
-        const hasAvailableSizes =
-          selectedColor.sizes && selectedColor.sizes.length > 0;
-
-        if (activeSizeButton) {
-          selectedSize = activeSizeButton.dataset.size;
-        } else if (hasAvailableSizes) {
-          // Only require size selection if sizes ARE available for the selected color
-          alert("Please select a size before purchasing.");
-          const sizeContainer = card.querySelector(".size-buttons-container");
-          if (sizeContainer) {
-            sizeContainer.classList.add("shake-animation");
-            setTimeout(() => {
-              sizeContainer.classList.remove("shake-animation");
-            }, 600);
-          }
-          return; // Stop processing
-        }
-        // If no sizes are available for this color, proceed without size
-
-        // Get the current image URL from the main image tag
-        const mainImage = card.querySelector(".main-product-image");
-        const imageUrl = mainImage
-          ? mainImage.src
-          : productColors[0]?.imageUrls?.[0] || ""; // Fallback image
-
-        // Create rich formatted message
-        let message = `🛒 *NEW ORDER REQUEST*\n`;
-        message += `━━━━━━━━━━━━━━━━━━━━\n\n`;
-
-        message += `📦 *PRODUCT DETAILS*\n`;
-        message += `• Product: *${productName}*\n`;
-        if (productBrand !== "Generic") message += `• Brand: ${productBrand}\n`;
-        message += `• Category: ${productCategory}\n`;
-        message += `• Color: ${colorName}\n`;
-        if (selectedSize) {
-          message += `• Size: *${selectedSize}*\n`;
-        } else if (!hasAvailableSizes) {
-          message += `• Size: Not Applicable\n`; // Indicate size wasn't needed
-        }
-        message += `• Price: *₹${productPrice}*\n\n`;
-
-        message += `📸 *Selected Image:*\n`;
-        message += `${imageUrl}\n\n`; // Use the currently displayed image
-
-        message += `━━━━━━━━━━━━━━━━━━━━\n`;
-        message += `💬 Please confirm availability and proceed with the order.`;
-
-        const whatsappURL = `https://wa.me/919050211616?text=${encodeURIComponent(
-          message
-        )}`;
-        window.open(whatsappURL, "_blank");
-      }
-      // NOTE: Image click for lightbox is handled automatically by GLightbox via the <a> tag now.
     });
-  } // --- End of productContainer logic ---
-}); // --- End of DOMContentLoaded ---
+  }
+});

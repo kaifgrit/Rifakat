@@ -1,186 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Sandals Collection - Rifakat Shoe Garden</title>
-    <meta name="description" content="Discover comfortable and stylish sandals at Rifakat Shoe Garden. Perfect for warm weather and casual outings in Nuh, Haryana.">
-    <meta name="keywords" content="sandals, footwear, shoe store, Nuh, Haryana, Rifakat Shoe Garden">
-    
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://your-production-domain.com/sandals.html">
-    <meta property="og:title" content="Sandals Collection - Rifakat Shoe Garden">
-    <meta property="og:description" content="Shop our latest collection of stylish and comfortable sandals.">
-    <meta property="og:image" content="https://your-production-domain.com/assets/og-image-sandals.jpg">
+    <meta
+      name="description"
+      content="Discover comfortable and stylish sandals at Rifakat Shoe Garden. Perfect for warm weather and casual outings in Nuh, Haryana."
+    />
+    <meta
+      name="keywords"
+      content="sandals, footwear, shoe store, Nuh, Haryana, Rifakat Shoe Garden"
+    />
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://your-production-domain.com/sandals.html">
-    <meta name="twitter:title" content="Sandals Collection - Rifakat Shoe Garden">
-    <meta name="twitter:description" content="Shop our latest collection of stylish and comfortable sandals.">
-    <meta name="twitter:image" content="https://your-production-domain.com/assets/og-image-sandals.jpg">
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://your-production-domain.com/sandals.html"
+    />
+    <meta
+      property="og:title"
+      content="Sandals Collection - Rifakat Shoe Garden"
+    />
+    <meta
+      property="og:description"
+      content="Shop our latest collection of stylish and comfortable sandals."
+    />
+    <meta
+      property="og:image"
+      content="https://your-production-domain.com/assets/og-image-sandals.jpg"
+    />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:url"
+      content="https://your-production-domain.com/sandals.html"
+    />
+    <meta
+      name="twitter:title"
+      content="Sandals Collection - Rifakat Shoe Garden"
+    />
+    <meta
+      name="twitter:description"
+      content="Shop our latest collection of stylish and comfortable sandals."
+    />
+    <meta
+      name="twitter:image"
+      content="https://your-production-domain.com/assets/og-image-sandals.jpg"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --accent-red: #EA553B;
-            --accent-red-darker: #D44A32;
-            --neutral-light: #f8f9fa;
-            --text-primary: #1f2937;
+      :root {
+        --accent-red: #ea553b;
+        --accent-red-darker: #d44a32;
+        --neutral-light: #f8f9fa;
+        --text-primary: #1f2937;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        color: var(--text-primary);
+        background-color: var(--neutral-light);
+      }
+      .header {
+        background-color: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+      }
+      .nav-link::after {
+        content: "";
+        display: block;
+        width: 0;
+        height: 2px;
+        background: var(--accent-red);
+        transition: width 0.3s;
+      }
+      .nav-link:hover::after {
+        width: 100%;
+      }
+      .cta-button {
+        background-color: var(--accent-red);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+      .cta-button:hover {
+        background-color: var(--accent-red-darker);
+        transform: translateY(-2px);
+      }
+      .product-card img {
+        transition: transform 0.3s ease;
+      }
+      .product-card:hover .product-image-container img {
+        transform: scale(1.05);
+      }
+      .product-images img {
+        display: none;
+      }
+      .product-images img.active {
+        display: block;
+      }
+      .color-swatches {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        justify-content: center;
+      }
+      .color-swatch {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid #e5e7eb;
+        transition: transform 0.2s, border-color 0.2s;
+      }
+      .color-swatch:hover {
+        transform: scale(1.1);
+      }
+      .color-swatch.active {
+        border-color: var(--accent-red);
+        box-shadow: 0 0 0 2px white, 0 0 0 4px var(--accent-red);
+      }
+      .size-buttons-container {
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .size-buttons-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+      }
+
+      .size-button {
+        min-width: 45px;
+        padding: 8px 12px;
+        background-color: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #1f2937;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        user-select: none;
+      }
+
+      .size-button:hover {
+        border-color: var(--accent-red);
+        background-color: rgba(234, 85, 59, 0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .size-button.active {
+        background-color: var(--accent-red);
+        border-color: var(--accent-red);
+        color: white;
+        box-shadow: 0 4px 12px rgba(234, 85, 59, 0.3);
+        transform: scale(1.05);
+      }
+
+      .size-button:active {
+        transform: scale(0.98);
+      }
+
+      /* Shake animation for validation */
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
         }
-        body { font-family: 'Poppins', sans-serif; color: var(--text-primary); background-color: var(--neutral-light); }
-        .header { background-color: rgba(0, 0, 0, 0.8); backdrop-filter: blur(10px); }
-        .nav-link::after { content: ''; display: block; width: 0; height: 2px; background: var(--accent-red); transition: width .3s; }
-        .nav-link:hover::after { width: 100%; }
-        .cta-button { background-color: var(--accent-red); transition: background-color 0.3s ease, transform 0.2s ease; }
-        .cta-button:hover { background-color: var(--accent-red-darker); transform: translateY(-2px); }
-        .product-card img { transition: transform 0.3s ease; }
-        .product-card:hover .product-image-container img { transform: scale(1.05); }
-        .product-images img { display: none; }
-        .product-images img.active { display: block; }
-        .color-swatches { display: flex; gap: 0.5rem; margin-top: 0.75rem; justify-content: center; }
-        .color-swatch { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid #e5e7eb; transition: transform 0.2s, border-color 0.2s; }
-        .color-swatch:hover { transform: scale(1.1); }
-        .color-swatch.active { border-color: var(--accent-red); box-shadow: 0 0 0 2px white, 0 0 0 4px var(--accent-red); }
-        .size-buttons-container {
-  padding: 10px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-}
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+          transform: translateX(-5px);
+        }
+        20%,
+        40%,
+        60%,
+        80% {
+          transform: translateX(5px);
+        }
+      }
 
-.size-buttons-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-}
+      .shake-animation {
+        animation: shake 0.6s ease-in-out;
+        border: 2px solid var(--accent-red) !important;
+      }
 
-.size-button {
-  min-width: 45px;
-  padding: 8px 12px;
-  background-color: white;
-  border: 2px solid #e5e7eb;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: #1f2937;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
-}
+      /* Mobile responsive */
+      @media (max-width: 640px) {
+        .size-button {
+          min-width: 40px;
+          padding: 6px 10px;
+          font-size: 0.85rem;
+        }
 
-.size-button:hover {
-  border-color: var(--accent-red);
-  background-color: rgba(234, 85, 59, 0.05);
-  transform: translateY(-2px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.size-button.active {
-  background-color: var(--accent-red);
-  border-color: var(--accent-red);
-  color: white;
-  box-shadow: 0 4px 12px rgba(234, 85, 59, 0.3);
-  transform: scale(1.05);
-}
-
-.size-button:active {
-  transform: scale(0.98);
-}
-
-/* Shake animation for validation */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
-}
-
-.shake-animation {
-  animation: shake 0.6s ease-in-out;
-  border: 2px solid var(--accent-red) !important;
-}
-
-/* Mobile responsive */
-@media (max-width: 640px) {
-  .size-button {
-    min-width: 40px;
-    padding: 6px 10px;
-    font-size: 0.85rem;
-  }
-  
-  .size-buttons-grid {
-    gap: 6px;
-  }
-}
-    /* --- START: NEW FILTER STYLES --- */
-    .filter-sidebar {
+        .size-buttons-grid {
+          gap: 6px;
+        }
+      }
+      /* --- START: NEW FILTER STYLES --- */
+      .filter-sidebar {
         width: 280px;
         background-color: #ffffff;
         padding: 1.5rem;
         border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         align-self: flex-start; /* Aligns to top */
-    }
-    
-    .filter-group {
+      }
+
+      .filter-group {
         margin-bottom: 1.5rem;
         border-bottom: 1px solid #e5e7eb;
         padding-bottom: 1.5rem;
-    }
-    .filter-group:last-child {
+      }
+      .filter-group:last-child {
         border-bottom: none;
         padding-bottom: 0;
         margin-bottom: 0;
-    }
-    .filter-group h3 {
+      }
+      .filter-group h3 {
         font-size: 1.125rem;
         font-weight: 600;
         margin-bottom: 1rem;
         color: var(--text-primary);
-    }
-    
-    .filter-group select, .filter-group input[type="text"] {
+      }
+
+      .filter-group select,
+      .filter-group input[type="text"] {
         width: 100%;
         padding: 0.5rem 0.75rem;
         border: 2px solid #e5e7eb;
         border-radius: 6px;
         transition: border-color 0.2s;
-    }
-    .filter-group select:focus, .filter-group input[type="text"]:focus {
+      }
+      .filter-group select:focus,
+      .filter-group input[type="text"]:focus {
         outline: none;
         border-color: var(--accent-red);
-    }
-    
-    .brand-filter-list {
+      }
+
+      .brand-filter-list {
         max-height: 200px;
         overflow-y: auto;
         padding-right: 8px; /* For scrollbar */
-    }
-    
-    .brand-filter-list label {
+      }
+
+      .brand-filter-list label {
         display: flex;
         align-items: center;
         gap: 0.5rem;
         margin-bottom: 0.5rem;
         font-size: 0.95rem;
         cursor: pointer;
-    }
-    .brand-filter-list input[type="checkbox"] {
+      }
+      .brand-filter-list input[type="checkbox"] {
         accent-color: var(--accent-red);
-    }
-    
-    .filter-buttons {
+      }
+
+      .filter-buttons {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
         margin-top: 1rem;
-    }
-    .filter-btn {
+      }
+      .filter-btn {
         padding: 0.75rem 1rem;
         border-radius: 6px;
         font-weight: 600;
@@ -188,162 +286,591 @@
         transition: all 0.3s ease;
         cursor: pointer;
         border: none;
-    }
-    .btn-apply {
+      }
+      .btn-apply {
         background-color: var(--accent-red);
         color: white;
-    }
-    .btn-apply:hover {
+      }
+      .btn-apply:hover {
         background-color: var(--accent-red-darker);
-    }
-    .btn-clear {
+      }
+      .btn-clear {
         background-color: #e5e7eb;
         color: var(--text-primary);
-    }
-    .btn-clear:hover {
+      }
+      .btn-clear:hover {
         background-color: #d1d5db;
-    }
-    
-    .mobile-filter-backdrop {
+      }
+
+      .mobile-filter-backdrop {
         display: none;
         position: fixed;
         inset: 0;
-        background-color: rgba(0,0,0,0.5);
+        background-color: rgba(0, 0, 0, 0.5);
         z-index: 55;
-    }
-    
-    .mobile-filter-backdrop.open {
+      }
+
+      .mobile-filter-backdrop.open {
         display: block;
-    }
-    
-    /* Mobile filter slide-out */
-    @media (max-width: 767px) {
+      }
+      /* ========================================
+   QUICK VIEW MODAL STYLES
+   ======================================== */
+      .quick-view-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background-color: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(4px);
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        animation: fadeIn 0.2s ease-out;
+      }
+
+      .quick-view-modal.active {
+        display: flex;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .quick-view-content {
+        background: white;
+        border-radius: 16px;
+        max-width: 900px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        animation: slideUp 0.3s ease-out;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .quick-view-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        transition: background 0.2s;
+      }
+
+      .quick-view-close:hover {
+        background: rgba(0, 0, 0, 0.8);
+      }
+
+      .quick-view-body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        padding: 2rem;
+      }
+
+      .quick-view-gallery {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .quick-view-main-image {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #f3f4f6;
+        position: relative;
+      }
+
+      .quick-view-main-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        cursor: zoom-in;
+      }
+
+      .quick-view-thumbnails {
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+      }
+
+      .quick-view-thumbnail {
+        min-width: 80px;
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #f3f4f6;
+      }
+
+      .quick-view-thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .quick-view-thumbnail:hover {
+        border-color: #d1d5db;
+      }
+
+      .quick-view-thumbnail.active {
+        border-color: var(--accent-red);
+        box-shadow: 0 0 0 2px rgba(234, 85, 59, 0.2);
+      }
+
+      .quick-view-details {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .quick-view-brand {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+      }
+
+      .quick-view-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1.3;
+        color: var(--text-primary);
+        margin: 0;
+      }
+
+      .quick-view-price {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--accent-red);
+      }
+
+      .quick-view-category {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: #f3f4f6;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      .quick-view-color-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .quick-view-color-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .quick-view-color-name {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        margin-left: 0.5rem;
+      }
+
+      .quick-view-color-swatches {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .quick-view-color-swatch {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid #e5e7eb;
+        transition: all 0.2s;
+        position: relative;
+      }
+
+      .quick-view-color-swatch:hover {
+        transform: scale(1.1);
+      }
+
+      .quick-view-color-swatch.active {
+        border-color: var(--accent-red);
+        box-shadow: 0 0 0 3px rgba(234, 85, 59, 0.2);
+      }
+
+      .quick-view-color-swatch.active::after {
+        content: "✓";
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      .quick-view-size-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .quick-view-size-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .quick-view-size-buttons {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .quick-view-size-button {
+        min-width: 50px;
+        padding: 0.75rem 1rem;
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: var(--text-primary);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .quick-view-size-button:hover {
+        border-color: var(--accent-red);
+        background: rgba(234, 85, 59, 0.05);
+      }
+
+      .quick-view-size-button.active {
+        background: var(--accent-red);
+        border-color: var(--accent-red);
+        color: white;
+        transform: scale(1.05);
+      }
+
+      .quick-view-no-sizes {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        font-style: italic;
+      }
+
+      .quick-view-buy-button {
+        width: 100%;
+        padding: 1rem 2rem;
+        background: var(--accent-red);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: auto;
+      }
+
+      .quick-view-buy-button:hover {
+        background: var(--accent-red-darker);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(234, 85, 59, 0.3);
+      }
+
+      .quick-view-buy-button:active {
+        transform: translateY(0);
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 768px) {
+        .quick-view-content {
+          max-height: 95vh;
+          border-radius: 12px 12px 0 0;
+          margin-top: auto;
+        }
+
+        .quick-view-body {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+          padding: 1.5rem;
+          padding-top: 3rem;
+        }
+
+        .quick-view-close {
+          top: 0.75rem;
+          right: 0.75rem;
+          width: 36px;
+          height: 36px;
+          font-size: 20px;
+        }
+
+        .quick-view-title {
+          font-size: 1.5rem;
+        }
+
+        .quick-view-price {
+          font-size: 1.5rem;
+        }
+
+        .quick-view-main-image {
+          max-height: 300px;
+        }
+
+        .quick-view-thumbnail {
+          min-width: 60px;
+          width: 60px;
+          height: 60px;
+        }
+
+        .quick-view-color-swatch {
+          width: 36px;
+          height: 36px;
+        }
+
+        .quick-view-size-button {
+          min-width: 45px;
+          padding: 0.6rem 0.8rem;
+          font-size: 0.8rem;
+        }
+
+        .quick-view-buy-button {
+          padding: 0.875rem 1.5rem;
+          font-size: 0.9rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .quick-view-modal {
+          padding: 0;
+        }
+
+        .quick-view-content {
+          border-radius: 0;
+          max-height: 100vh;
+        }
+
+        .quick-view-body {
+          padding: 1rem;
+          padding-top: 3rem;
+        }
+      }
+
+      /* Quick View Button on Card */
+      .quick-view-btn {
+        transition: all 0.3s ease;
+      }
+
+      .product-card .product-image-container {
+        position: relative;
+      }
+
+      .product-card:hover .quick-view-btn {
+        opacity: 1 !important;
+      }
+      /* Mobile filter slide-out */
+      @media (max-width: 767px) {
         .filter-sidebar {
-            position: fixed;
-            top: 0;
-            left: -300px; /* Start off-screen */
-            width: 300px;
-            height: 100vh;
-            z-index: 60;
-            transition: transform 0.3s ease-in-out;
-            border-radius: 0;
-            overflow-y: auto;
+          position: fixed;
+          top: 0;
+          left: -300px; /* Start off-screen */
+          width: 300px;
+          height: 100vh;
+          z-index: 60;
+          transition: transform 0.3s ease-in-out;
+          border-radius: 0;
+          overflow-y: auto;
         }
         .filter-sidebar.open {
-            transform: translateX(300px);
+          transform: translateX(300px);
         }
         .filter-grid-layout {
-            flex-direction: column;
+          flex-direction: column;
         }
         .product-grid-area {
-            width: 100%;
+          width: 100%;
         }
-    }
-    /* --- END: NEW FILTER STYLES --- */
+      }
+      /* --- END: NEW FILTER STYLES --- */
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <header id="header" class="header sticky top-0 z-50 p-4 text-white">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="index.html">
-                <img class="h-12 w-auto" src="https://res.cloudinary.com/dxouvnf7y/image/upload/v1761376938/logo_dkkwxi.jpg" alt="Rifakat Shoe Garden Logo">
-            </a>
-            <div class="text-lg font-bold tracking-wider md:hidden">
-                Rifakat Shoe Garden
-            </div>
-            <nav class="hidden md:flex items-center space-x-8">
-                <a href="index.html#home" class="nav-link">Home</a>
-                <a href="index.html#about" class="nav-link">About</a>
-                <a href="index.html#categories" class="nav-link">Collection</a>
-                <a href="index.html#contact" class="nav-link">Contact</a>
-            </nav>
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="index.html">
+          <img
+            class="h-12 w-auto"
+            src="https://res.cloudinary.com/dxouvnf7y/image/upload/v1761376938/logo_dkkwxi.jpg"
+            alt="Rifakat Shoe Garden Logo"
+          />
+        </a>
+        <div class="text-lg font-bold tracking-wider md:hidden">
+          Rifakat Shoe Garden
         </div>
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="index.html#home" class="nav-link">Home</a>
+          <a href="index.html#about" class="nav-link">About</a>
+          <a href="index.html#categories" class="nav-link">Collection</a>
+          <a href="index.html#contact" class="nav-link">Contact</a>
+        </nav>
+      </div>
     </header>
 
     <main>
-        <section class="py-16 md:py-24">
-            <div class="container mx-auto px-4">
-                <div class="text-center mb-8">
-                    <h1 id="page-title" class="text-4xl md:text-5xl font-bold mb-4">Loading...</h1>
-                    <p class="text-lg text-gray-600">Please wait while we fetch our collection.</p>
-                </div>
-                
-                <div class="md:hidden mb-6 flex justify-between items-center">
-                    <button id="mobile-filter-toggle" class="flex items-center gap-2 text-lg font-semibold cta-button text-white py-2 px-4 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L13 10.414V15a1 1 0 01-.293.707l-2 2A1 1 0 019 17v-6.586L4.293 6.707A1 1 0 014 6V3z" clip-rule="evenodd" />
-                        </svg>
-                        Filter & Sort
-                    </button>
-                    <span id="product-count" class="text-gray-600 font-medium"></span>
-                </div>
+      <section class="py-16 md:py-24">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-8">
+            <h1 id="page-title" class="text-4xl md:text-5xl font-bold mb-4">
+              Loading...
+            </h1>
+            <p class="text-lg text-gray-600">
+              Please wait while we fetch our collection.
+            </p>
+          </div>
 
-                <div class="filter-grid-layout flex flex-col md:flex-row md:gap-8">
-                    
-                    <aside id="filter-sidebar" class="filter-sidebar md:block">
-                        <div class="flex justify-between items-center md:hidden mb-4">
-                            <h2 class="text-2xl font-bold">Filters</h2>
-                            <button id="close-filter-sidebar" class="text-3xl">&times;</button>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <h3>Sort By</h3>
-                            <select id="sort-by" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
-                                <option value="default">Default</option>
-                                <option value="price-asc">Price: Low to High</option>
-                                <option value="price-desc">Price: High to Low</option>
-                                <option value="brand-asc">Brand: A to Z</option>
-                                <option value="brand-desc">Brand: Z to A</option>
-                            </select>
-                        </div>
-                        
-                        <div class="filter-group">
-                            <h3>Filter by Brand</h3>
-                            <div id="brand-filter-list" class="brand-filter-list">
-                                <p class="text-gray-500 text-sm">Loading brands...</p>
-                            </div>
-                        </div>
+          <div class="md:hidden mb-6 flex justify-between items-center">
+            <button
+              id="mobile-filter-toggle"
+              class="flex items-center gap-2 text-lg font-semibold cta-button text-white py-2 px-4 rounded-lg"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L13 10.414V15a1 1 0 01-.293.707l-2 2A1 1 0 019 17v-6.586L4.293 6.707A1 1 0 014 6V3z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              Filter & Sort
+            </button>
+            <span id="product-count" class="text-gray-600 font-medium"></span>
+          </div>
 
-                        <div classs="filter-buttons">
-                            <button id="apply-filters" class="filter-btn btn-apply">Apply Filters</button>
-                            <button id="clear-filters" class="filter-btn btn-clear">Clear All</button>
-                        </div>
-                    </aside>
-                    
-                    <div id="mobile-filter-backdrop" class="mobile-filter-backdrop"></div>
+          <div class="filter-grid-layout flex flex-col md:flex-row md:gap-8">
+            <aside id="filter-sidebar" class="filter-sidebar md:block">
+              <div class="flex justify-between items-center md:hidden mb-4">
+                <h2 class="text-2xl font-bold">Filters</h2>
+                <button id="close-filter-sidebar" class="text-3xl">
+                  &times;
+                </button>
+              </div>
 
-                    <div class="product-grid-area w-full">
-                        <div class="hidden md:flex justify-end mb-4">
-                           <span id="product-count-desktop" class="text-gray-600 font-medium"></span>
-                        </div>
-                        <div id="product-container">
-                            <p>Loading products...</p>
-                        </div>
-                    </div>
+              <div class="filter-group">
+                <h3>Sort By</h3>
+                <select
+                  id="sort-by"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                >
+                  <option value="default">Default</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="brand-asc">Brand: A to Z</option>
+                  <option value="brand-desc">Brand: Z to A</option>
+                </select>
+              </div>
 
+              <div class="filter-group">
+                <h3>Filter by Brand</h3>
+                <div id="brand-filter-list" class="brand-filter-list">
+                  <p class="text-gray-500 text-sm">Loading brands...</p>
                 </div>
-                </div>
-        </section>
+              </div>
+
+              <div classs="filter-buttons">
+                <button id="apply-filters" class="filter-btn btn-apply">
+                  Apply Filters
+                </button>
+                <button id="clear-filters" class="filter-btn btn-clear">
+                  Clear All
+                </button>
+              </div>
+            </aside>
+
+            <div
+              id="mobile-filter-backdrop"
+              class="mobile-filter-backdrop"
+            ></div>
+
+            <div class="product-grid-area w-full">
+              <div class="hidden md:flex justify-end mb-4">
+                <span
+                  id="product-count-desktop"
+                  class="text-gray-600 font-medium"
+                ></span>
+              </div>
+              <div id="product-container">
+                <p>Loading products...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="bg-black text-white py-12">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-gray-400">&copy; 2025 Rifakat Shoe Garden. All Rights Reserved.</p>
-        </div>
+      <div class="container mx-auto px-4 text-center">
+        <p class="text-gray-400">
+          &copy; 2025 Rifakat Shoe Garden. All Rights Reserved.
+        </p>
+      </div>
     </footer>
-   
 
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                GLightbox({ selector: '.glightbox' });
-            }, 500);
-        });
+      document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => {
+          GLightbox({ selector: ".glightbox" });
+        }, 500);
+      });
     </script>
-     <script src="js/config.js"></script>
+    <script src="js/config.js"></script>
 
     <script src="js/app.js"></script>
-</body>
+  </body>
 </html>
