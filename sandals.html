@@ -657,7 +657,59 @@
         .quick-view-main-image {
           max-height: 300px;
         }
+        .quick-view-main-image {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #f3f4f6;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
+      /* --- START: NEW CSS FOR ARROWS --- */
+      .quick-view-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.4);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.2s ease, opacity 0.3s ease;
+        opacity: 0; /* Hide by default */
+        z-index: 10;
+      }
+      
+      .quick-view-main-image:hover .quick-view-nav {
+        opacity: 1; /* Show on desktop hover */
+      }
+
+      .quick-view-nav.prev {
+        left: 10px;
+      }
+
+      .quick-view-nav.next {
+        right: 10px;
+      }
+
+      .quick-view-nav:hover {
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+      
+      /* Show arrows on touch devices (where hover isn't reliable) */
+      @media (hover: none) {
+        .quick-view-nav {
+          opacity: 0.6;
+        }
+      }
         .quick-view-thumbnail {
           min-width: 60px;
           width: 60px;
