@@ -1,4 +1,4 @@
-// js/app.js - Enhanced with Quick View Modal
+// js/app.js - Enhanced with Quick View Modal (with Swipe/Keyboard Navigation)
 
 document.addEventListener("DOMContentLoaded", () => {
   if (typeof config === "undefined") {
@@ -29,7 +29,59 @@ document.addEventListener("DOMContentLoaded", () => {
   let category = "";
   let pageHeader = "";
   let allCategoryProducts = [];
+  
+  // --- Quick View State ---
   let currentQuickViewProduct = null;
+  let currentQuickViewImageIndex = 0;
+  let currentQuickViewImageUrls = [];
+
+  // ========================================
+  // QUICK VIEW MODAL HELPER FUNCTIONS
+  // ========================================
+
+  /**
+   * Updates the main image and active thumbnail in the Quick View modal.
+   * @param {number} index - The index of the image to display.
+   */
+  const updateQuickViewImage = (index) => {
+    const mainImg = document.getElementById("quick-view-main-img");
+    const thumbnails = document.querySelectorAll(".quick-view-thumbnail");
+    
+    if (currentQuickViewImageUrls[index]) {
+      mainImg.src = currentQuickViewImageUrls[index];
+      currentQuickViewImageIndex = index;
+      
+      // Update active thumbnail
+      thumbnails.forEach((thumb, i) => {
+        if (i === index) {
+          thumb.classList.add("active");
+          // Scroll thumbnail into view if needed
+          thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+          thumb.classList.remove("active");
+        }
+      });
+    }
+  };
+
+  /** Displays the next image in the Quick View gallery. */
+  const showNextQuickViewImage = () => {
+    let nextIndex = currentQuickViewImageIndex + 1;
+    if (nextIndex >= currentQuickViewImageUrls.length) {
+      nextIndex = 0; // Loop to start
+    }
+    updateQuickViewImage(nextIndex);
+  };
+
+  /** Displays the previous image in the Quick View gallery. */
+  const showPrevQuickViewImage = () => {
+    let prevIndex = currentQuickViewImageIndex - 1;
+    if (prevIndex < 0) {
+      prevIndex = currentQuickViewImageUrls.length - 1; // Loop to end
+    }
+    updateQuickViewImage(prevIndex);
+  };
+
 
   // ========================================
   // QUICK VIEW MODAL FUNCTIONS
@@ -44,8 +96,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <button class="quick-view-close" aria-label="Close">&times;</button>
         <div class="quick-view-body">
           <div class="quick-view-gallery">
-            <div class="quick-view-main-image">
+            <div class="quick-view-main-image" id="quick-view-main-image-container">
               <img src="" alt="" id="quick-view-main-img">
+              <button class="quick-view-nav prev" id="quick-view-prev" aria-label="Previous image">&#10094;</button>
+              <button class="quick-view-nav next" id="quick-view-next" aria-label="Next image">&#10095;</button>
             </div>
             <div class="quick-view-thumbnails" id="quick-view-thumbnails"></div>
           </div>
@@ -83,12 +137,52 @@ document.addEventListener("DOMContentLoaded", () => {
       if (e.target === modal) closeQuickView();
     });
 
-    // ESC key to close
+    // --- NEW: Navigation Event Listeners ---
+    
+    // Arrow button clicks
+    modal.querySelector("#quick-view-prev").addEventListener("click", showPrevQuickViewImage);
+    modal.querySelector("#quick-view-next").addEventListener("click", showNextQuickViewImage);
+
+    // Keyboard navigation
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modal.classList.contains("active")) {
+      if (!modal.classList.contains("active")) return;
+      if (e.key === "Escape") {
         closeQuickView();
       }
+      if (e.key === "ArrowRight") {
+        e.preventDefault(); // Prevent page scroll
+        showNextQuickViewImage();
+      }
+      if (e.key === "ArrowLeft") {
+        e.preventDefault(); // Prevent page scroll
+        showPrevQuickViewImage();
+      }
     });
+
+    // Swipe navigation
+    const mainImageContainer = modal.querySelector("#quick-view-main-image-container");
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    mainImageContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    mainImageContainer.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipeGesture();
+    }, { passive: true });
+    
+    function handleSwipeGesture() {
+      const swipeThreshold = 50; // Minimum pixels for a swipe
+      if (touchEndX < touchStartX - swipeThreshold) { // Swiped left (show next)
+        showNextQuickViewImage();
+      }
+      if (touchEndX > touchStartX + swipeThreshold) { // Swiped right (show prev)
+        showPrevQuickViewImage();
+      }
+    }
+    // --- END: New Listeners ---
 
     return modal;
   };
@@ -103,8 +197,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Populate modal
     const firstColor = product.colors[0] || {};
-    const urls = firstColor.imageUrls || (firstColor.imageUrl ? [firstColor.imageUrl] : []);
-    const firstImage = urls[0] || "https://via.placeholder.com/400x400.png?text=No+Image";
+    
+    // --- UPDATE: Use state variables ---
+    currentQuickViewImageUrls = firstColor.imageUrls || (firstColor.imageUrl ? [firstColor.imageUrl] : []);
+    currentQuickViewImageIndex = 0;
+    const firstImage = currentQuickViewImageUrls[0] || "https://via.placeholder.com/400x400.png?text=No+Image";
+    // --- END UPDATE ---
 
     document.getElementById("quick-view-brand").textContent = product.brand || "Generic";
     document.getElementById("quick-view-title").textContent = product.productName;
@@ -128,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
     `).join("");
 
     // Thumbnails
-    updateQuickViewThumbnails(urls, 0);
+    updateQuickViewThumbnails(currentQuickViewImageUrls, 0); // Use state variable
 
     // Sizes
     updateQuickViewSizes(firstColor.sizes || []);
@@ -164,6 +262,8 @@ document.addEventListener("DOMContentLoaded", () => {
       modal.classList.remove("active");
       document.body.style.overflow = "";
       currentQuickViewProduct = null;
+      currentQuickViewImageUrls = [];
+      currentQuickViewImageIndex = 0;
     }
   };
 
@@ -186,32 +286,31 @@ document.addEventListener("DOMContentLoaded", () => {
       // Update color name
       document.getElementById("quick-view-selected-color").textContent = selectedColor.colorName || "Default";
 
-      // Update images
-      const urls = selectedColor.imageUrls || (selectedColor.imageUrl ? [selectedColor.imageUrl] : []);
-      const firstImage = urls[0] || "https://via.placeholder.com/400x400.png?text=No+Image";
+      // --- UPDATE: Update state variables and call helpers ---
+      currentQuickViewImageUrls = selectedColor.imageUrls || (selectedColor.imageUrl ? [selectedColor.imageUrl] : []);
+      const firstImage = currentQuickViewImageUrls[0] || "https://via.placeholder.com/400x400.png?text=No+Image";
       
+      // Update main image
       const mainImg = document.getElementById("quick-view-main-img");
       mainImg.src = firstImage;
+      currentQuickViewImageIndex = 0; // Reset index
 
-      updateQuickViewThumbnails(urls, 0);
+      // Update thumbnails
+      updateQuickViewThumbnails(currentQuickViewImageUrls, 0);
 
       // Update sizes
       updateQuickViewSizes(selectedColor.sizes || []);
+      // --- END UPDATE ---
     }
 
     // Thumbnail click
     if (e.target.closest(".quick-view-thumbnail")) {
       const thumbnail = e.target.closest(".quick-view-thumbnail");
       const imageIndex = parseInt(thumbnail.dataset.imageIndex);
-      const activeColorIndex = Array.from(modal.querySelectorAll(".quick-view-color-swatch")).findIndex(s => s.classList.contains("active"));
-      const selectedColor = currentQuickViewProduct.colors[activeColorIndex] || currentQuickViewProduct.colors[0];
-      const urls = selectedColor.imageUrls || [];
-
-      if (urls[imageIndex]) {
-        document.getElementById("quick-view-main-img").src = urls[imageIndex];
-        modal.querySelectorAll(".quick-view-thumbnail").forEach(t => t.classList.remove("active"));
-        thumbnail.classList.add("active");
-      }
+      
+      // --- UPDATE: Use helper function ---
+      updateQuickViewImage(imageIndex);
+      // --- END UPDATE ---
     }
 
     // Size button click
@@ -246,7 +345,7 @@ document.addEventListener("DOMContentLoaded", () => {
       message += `━━━━━━━━━━━━━━━━━━━━\n\n`;
       message += `📦 *PRODUCT DETAILS*\n`;
       message += `• Product: *${currentQuickViewProduct.productName}*\n`;
-      if (currentQuickViewProduct.brand !== "Generic") message += `• Brand: ${currentQuickViewProduct.brand}\n`;
+      if (currentQuickViewProduct.brand && currentQuickViewProduct.brand !== "Generic") message += `• Brand: ${currentQuickViewProduct.brand}\n`;
       message += `• Category: ${currentQuickViewProduct.category}\n`;
       message += `• Color: ${selectedColor.colorName || "Default"}\n`;
       if (selectedSize) {
@@ -321,7 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
         processedProducts.sort((a, b) => a.price - b.price);
         break;
       case "price-desc":
-        processedProducts.sort((a, b) => b.price - a.price);
+        processedProducts.sort((a, b) => b.price - b.price);
         break;
       case "brand-asc":
         processedProducts.sort((a, b) => (a.brand || "Other").localeCompare(b.brand || "Other"));
