@@ -40,7 +40,7 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ["Sneakers", "Boots", "Sandals", "Slippers", "Formal Shoes"],
+    enum: ["Sneakers", "Boots", "Sandals", "Slippers", "Formal Shoes", "Sport Shoes"], // <-- UPDATED
   },
   price: { type: Number, required: true },
   colors: {

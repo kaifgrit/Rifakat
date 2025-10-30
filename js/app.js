@@ -1,5 +1,3 @@
-// js/app.js - Enhanced with Quick View Modal (with Swipe/Keyboard Navigation)
-
 document.addEventListener("DOMContentLoaded", () => {
   if (typeof config === "undefined") {
     console.error("ERROR: config.js not loaded!");
@@ -533,6 +531,9 @@ document.addEventListener("DOMContentLoaded", () => {
   } else if (pageTitle.includes("formal")) {
     category = "Formal Shoes";
     pageHeader = "Our Formal Shoe Collection";
+  } else if (pageTitle.includes("sport shoes")) { // <-- UPDATED from "sport"
+    category = "Sport Shoes"; // <-- UPDATED from "Sports"
+    pageHeader = "Our Sport Shoe Collection"; // <-- UPDATED
   }
 
   // --- Initialize Page ---

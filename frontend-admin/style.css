@@ -332,6 +332,22 @@ tbody tr:hover {
   background-color: #f8f9fa;
 }
 
+/* --- START: NEW IMAGE STYLES --- */
+td.product-image-cell {
+  width: 80px;
+  padding: 8px 12px;
+}
+
+.product-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  object-fit: cover;
+  background-color: #f4f7f6;
+  border: 1px solid #eee;
+}
+/* --- END: NEW IMAGE STYLES --- */
+
 /* ========== ACTION BUTTONS ========== */
 .actions {
   display: flex;
@@ -750,6 +766,24 @@ hr {
   td:first-child::before {
     display: none; /* No label for the first cell */
   }
+
+  /* --- START: NEW MOBILE IMAGE STYLE --- */
+  td.product-image-cell {
+    order: -2; /* Show image above the product name */
+    padding: 0 5px 10px; /* Adjust padding */
+    justify-content: center; /* Center the image */
+    border-bottom: none;
+  }
+  
+  td.product-image-cell::before {
+    display: none; /* Hide the "Image:" label */
+  }
+
+  td.product-image-cell .product-image {
+    width: 80px;
+    height: 80px;
+  }
+  /* --- END: NEW MOBILE IMAGE STYLE --- */
 
   .actions {
     flex-direction: column;

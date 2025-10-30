@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   async function fetchAllProducts() {
-    productList.innerHTML = `<tr><td colspan="6" style="text-align: center;">Loading products...</td></tr>`; // Updated colspan
+    productList.innerHTML = `<tr><td colspan="7" style="text-align: center;">Loading products...</td></tr>`; // <-- UPDATED colspan
     try {
       const response = await fetch(API_URL, {
         method: "GET",
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
         handleAuthError(error);
       } else {
         console.error("Error fetching products:", error);
-        productList.innerHTML = `<tr><td colspan="6">Error loading products. Is the backend server running?</td></tr>`; // Updated colspan
+        productList.innerHTML = `<tr><td colspan="7">Error loading products. Is the backend server running?</td></tr>`; // <-- UPDATED colspan
       }
     }
   }
@@ -72,15 +72,33 @@ document.addEventListener("DOMContentLoaded", () => {
   function displayProducts(products) {
     productList.innerHTML = "";
     if (products.length === 0) {
-      productList.innerHTML = `<tr><td colspan="6">No products found for this filter.</td></tr>`; // Updated colspan
+      productList.innerHTML = `<tr><td colspan="7">No products found for this filter.</td></tr>`; // <-- UPDATED colspan
       return;
     }
     products.forEach((product) => {
       const row = document.createElement("tr");
+
+      // --- START: NEW IMAGE LOGIC ---
+      // Find the first image of the first color
+      let firstImageUrl = "https://via.placeholder.com/60x60.png?text=No+Img"; // Fallback
+      if (product.colors && product.colors.length > 0) {
+        const firstColor = product.colors[0];
+        if (firstColor.imageUrls && firstColor.imageUrls.length > 0) {
+          firstImageUrl = firstColor.imageUrls[0];
+        } else if (firstColor.imageUrl) {
+          // Fallback for old format
+          firstImageUrl = firstColor.imageUrl;
+        }
+      }
+      // --- END: NEW IMAGE LOGIC ---
+
       // --- CORRECTED HTML: Removed comments ---
       row.innerHTML = `
                 <td class="select-col" data-label="Select"> 
                     <input type="checkbox" class="product-select-checkbox" value="${product._id}">
+                </td>
+                <td class="product-image-cell" data-label="Image">
+                    <img src="${firstImageUrl}" alt="${product.productName}" class="product-image">
                 </td>
                 <td data-label="Product Name">${product.productName}</td> 
                 <td data-label="Brand">${product.brand || "N/A"}</td> 
