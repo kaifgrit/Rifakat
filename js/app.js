@@ -531,10 +531,18 @@ document.addEventListener("DOMContentLoaded", () => {
   } else if (pageTitle.includes("formal")) {
     category = "Formal Shoes";
     pageHeader = "Our Formal Shoe Collection";
-  } else if (pageTitle.includes("sport shoes")) { // <-- UPDATED from "sport"
-    category = "Sport Shoes"; // <-- UPDATED from "Sports"
-    pageHeader = "Our Sport Shoe Collection"; // <-- UPDATED
+  
+  // ====================================================================
+  // ===== THIS IS THE CORRECTED LINE ===================================
+  // ====================================================================
+  } else if (pageTitle.includes("sport")) { // <-- IT NOW CHECKS FOR "sport" (singular)
+    category = "Sport Shoes"; 
+    pageHeader = "Our Sport Shoe Collection"; 
   }
+  // ====================================================================
+  // ====================================================================
+  // ====================================================================
+
 
   // --- Initialize Page ---
   if (category && productContainer) {
